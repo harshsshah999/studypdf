@@ -1,5 +1,5 @@
 package com.app.hardik.studypdf
-
+//Splashscreen
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
