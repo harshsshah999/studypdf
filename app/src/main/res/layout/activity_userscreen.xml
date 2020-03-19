@@ -10,25 +10,26 @@
         android:id="@+id/seekBar"
         style="@android:style/Widget.DeviceDefault.Light.SeekBar"
         android:layout_width="107dp"
-        android:layout_height="33dp"
-        android:backgroundTint="@android:color/background_light"
-        android:foregroundTint="@android:color/background_light"
-        android:indeterminateTint="@android:color/background_light"
+        android:layout_height="30dp"
         android:max="3"
-        android:min="1"
-        android:progress="1"
+        android:min="0"
+        android:progress="0"
         android:progressBackgroundTint="@android:color/background_light"
+        android:progressDrawable="@drawable/appintro_indicator_dot_white"
         android:progressTint="@android:color/background_light"
+        android:theme="@style/Widget.AppCompat.SeekBar.Discrete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.797" />
+        app:layout_constraintVertical_bias="0.8" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:shadowColor="@android:color/background_light"
         android:text="@string/Skip_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button2"
@@ -51,6 +52,7 @@
         android:id="@+id/textView2"
         android:layout_width="269dp"
         android:layout_height="121dp"
+        android:gravity="center_horizontal|center_vertical"
         android:text="@string/intro_text"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
@@ -70,5 +72,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/ic_launcher" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="162dp"
+        android:layout_height="474dp"
+        android:alpha="0.0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageView2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.186" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="162dp"
+        android:layout_height="474dp"
+        android:alpha="0.0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.186" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
