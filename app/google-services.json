@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "817145556497",
+    "firebase_url": "https://studypdf-6de89.firebaseio.com",
+    "project_id": "studypdf-6de89",
+    "storage_bucket": "studypdf-6de89.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817145556497:android:90373a04396d2f54e7cbb0",
+        "android_client_info": {
+          "package_name": "com.app.hardik.studypdf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "817145556497-khcooo4d0982o8cool80e4818b3qf3lk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkatHfGIFfJXg_83OqCtVUDQZdRpQOzGs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "817145556497-khcooo4d0982o8cool80e4818b3qf3lk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".userscreen">
+    tools:context=".Introscreen">
 
     <SeekBar
         android:id="@+id/seekBar"
@@ -26,26 +26,26 @@
         app:layout_constraintVertical_bias="0.8" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/skip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:shadowColor="@android:color/background_light"
         android:text="@string/Skip_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintEnd_toStartOf="@+id/next"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/seekBar" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/next_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button"
+        app:layout_constraintStart_toEndOf="@+id/skip"
         app:layout_constraintTop_toBottomOf="@+id/seekBar" />
 
     <TextView
@@ -74,7 +74,7 @@
         app:srcCompat="@mipmap/ic_launcher" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/leftslide"
         android:layout_width="162dp"
         android:layout_height="474dp"
         android:alpha="0.0"
@@ -86,7 +86,7 @@
         app:layout_constraintVertical_bias="0.186" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/rightslide"
         android:layout_width="162dp"
         android:layout_height="474dp"
         android:alpha="0.0"

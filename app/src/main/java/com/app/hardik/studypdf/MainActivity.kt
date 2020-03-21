@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
             override fun onAnimationStart(animation: Animation) {
             }
             override fun onAnimationEnd(animation: Animation) {
-                startActivity(Intent(this@MainActivity, userscreen::class.java))
+                startActivity(Intent(this@MainActivity, Introscreen::class.java))
                 // userscreen.class is the activity to go after showing the splash screen.
             }
             override fun onAnimationRepeat(animation: Animation) {
