@@ -9,6 +9,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
 
 class LoginPage : AppCompatActivity() {
     lateinit var loginbtn : Button
@@ -17,6 +19,9 @@ class LoginPage : AppCompatActivity() {
     lateinit var passwordtext : EditText
     lateinit var email: String
     lateinit var password: String
+    private lateinit var databaseRef: DatabaseReference
+    private lateinit var database: FirebaseDatabase
+
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +34,8 @@ class LoginPage : AppCompatActivity() {
         newusrbtn = findViewById(R.id.newuser)
         emailtext = findViewById(R.id.email)
         passwordtext = findViewById(R.id.password)
+        database = FirebaseDatabase.getInstance()
+        databaseRef = database.getReference().child("Auth").child("AllUsers")
 
         //Sign up Intent Fun
 
@@ -40,7 +47,8 @@ class LoginPage : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     //Log.i(TAG, "signInWithEmail:success")
                     val user = auth.currentUser
-                    startActivity(Intent(this,userdashboard::class.java))
+                    onAuthSuccess(user!!)
+
                 } else if(task.exception.toString() == "com.google.firebase.auth.FirebaseAuthInvalidUserException: There is no user record corresponding to this identifier. The user may have been deleted."){
                     Toast.makeText(baseContext, "User Doesn't Exist.",
                         Toast.LENGTH_LONG).show()
@@ -65,6 +73,25 @@ class LoginPage : AppCompatActivity() {
 
                 // ...
             }
+    }
+    fun onAuthSuccess(user: FirebaseUser) {
+        databaseRef.child(user.uid).child("UserID").addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+            override fun onDataChange(p0: DataSnapshot) {
+                val flag = p0.value.toString()
+                //Log.i("flagID",flag)
+                if(flag=="1") {
+                    startActivity(Intent(this@LoginPage, userdashboard::class.java))
+                }
+                else if (flag=="2"){
+                    startActivity(Intent(this@LoginPage, Admindashboard::class.java))
+                }
+            }
+
+        })
+
     }
     fun newuser (v: View){
         startActivity(Intent(this,SignUp::class.java))

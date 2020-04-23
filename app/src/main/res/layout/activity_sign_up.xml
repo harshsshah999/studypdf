@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".SignUp">
 
+    <Button
+        android:id="@+id/signupadm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="Signupadm"
+        android:text=" SignUp as Admin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.806" />
+
     <EditText
         android:id="@+id/confpassword"
         android:layout_width="0dp"
@@ -35,17 +48,17 @@
         app:layout_constraintVertical_bias="0.126" />
 
     <Button
-        android:id="@+id/signup"
+        android:id="@+id/signupstd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="Signup"
-        android:text="SignUp"
+        android:onClick="Signupstd"
+        android:text="SignUp as Student"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.526"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.809" />
+        app:layout_constraintVertical_bias="0.696" />
 
     <EditText
         android:id="@+id/email"
@@ -89,7 +102,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signup"
+        app:layout_constraintTop_toBottomOf="@+id/signupstd"
         app:layout_constraintVertical_bias="0.728" />
 
     <EditText
