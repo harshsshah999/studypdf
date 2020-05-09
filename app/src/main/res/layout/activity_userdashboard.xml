@@ -6,16 +6,67 @@
     android:layout_height="match_parent"
     tools:context=".userdashboard">
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="251dp"
-        android:layout_height="56dp"
-        android:text="User Dashboard"
-        android:textAlignment="center"
+    <Button
+        android:id="@+id/CSS"
+        android:layout_width="391dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="25dp"
+        android:onClick="onClick"
+        android:text="CSS PDF = 90 RS"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SPCC" />
+
+    <Button
+        android:id="@+id/SPCC"
+        android:layout_width="391dp"
+        android:layout_height="0dp"
+        android:onClick="onClick"
+        android:text="SPCC PDF =  70 RS"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/CSS"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TCS" />
+
+    <Button
+        android:id="@+id/TCS"
+        android:layout_width="391dp"
+        android:layout_height="0dp"
+        android:onClick="onClick"
+        android:text="TCS PDF = 100 RS"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/SPCC"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SE" />
+
+    <TextView
+        android:id="@+id/welcome"
+        android:layout_width="310dp"
+        android:layout_height="83dp"
+        android:text="User Dashboard"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.096" />
+        app:layout_constraintVertical_bias="0.044" />
+
+    <Button
+        android:id="@+id/SE"
+        android:layout_width="391dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="290dp"
+        android:onClick="onClick"
+        android:text="SE PDF = 50 Rs"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/TCS"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
