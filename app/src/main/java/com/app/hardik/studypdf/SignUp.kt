@@ -3,10 +3,14 @@ package com.app.hardik.studypdf
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -27,6 +31,7 @@ class SignUp : AppCompatActivity() {
     lateinit var email: String
     lateinit var password: String
     lateinit var name: String
+    private lateinit var spinner: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,18 +50,34 @@ class SignUp : AppCompatActivity() {
         signup = findViewById(R.id.signupstd)
         olduser = findViewById(R.id.olduser)
 
+        //spinner
+        spinner = findViewById<ProgressBar>(R.id.progressBar1)
+
+
+        //Code for hide keyboard if touched anywhere
+        fun View.hideKeyboard() {
+            val inputMethodManager = context!!.getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(this.windowToken, 0)
+        }
+        val pageView: View = findViewById(R.id.signuppage)
+        pageView.setOnClickListener {
+            it.hideKeyboard()
+        }
+
     }
 
     fun createAccount(email: String, password: String, name: String, flag: Int) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    spinner.visibility = View.GONE      //Make spinner Gone
                     // Sign in success, update UI with the signed-in user's information
                     //Log.d(TAG, "createUserWithEmail:success")
                     val user = auth.currentUser
                     onAuthSuccess(user!!, name, flag)
 
                 } else if (task.exception.toString() == "com.google.firebase.auth.FirebaseAuthInvalidCredentialsException: The email address is badly formatted.") {
+                    spinner.visibility = View.GONE      //Make spinner Gone
                     // If sign in fails, display a message to the user.
                     Log.i("Error of", task.exception.toString())
                     Toast.makeText(
@@ -64,12 +85,14 @@ class SignUp : AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
                 } else if (task.exception.toString() == "com.google.firebase.auth.FirebaseAuthWeakPasswordException: The given password is invalid. [ Password should be at least 6 characters ]") {
+                    spinner.visibility = View.GONE      //Make spinner Gone
                     Log.i("Error of", task.exception.toString())
                     Toast.makeText(
                         baseContext, "Password is too Small! (At least 6 characters)",
                         Toast.LENGTH_LONG
                     ).show()
                 } else {
+                    spinner.visibility = View.GONE      //Make spinner Gone
                     Toast.makeText(baseContext, "Unknown Error Occurred!", Toast.LENGTH_LONG).show()
                 }
 
@@ -85,6 +108,7 @@ class SignUp : AppCompatActivity() {
                 databaseRef.child("Auth").child("AllUsers").child(user.uid).child("Username").setValue(name)
                 databaseRef.child("Auth").child("AllUsers").child(user.uid).child("UserID").setValue(flag)
                 startActivity(Intent(this,userdashboard::class.java))
+                finish()
             }
         else if(flag == 2) {
                 databaseRef.child("Users").child("Admin").child(user.uid).child("Username").setValue(name)
@@ -92,12 +116,14 @@ class SignUp : AppCompatActivity() {
                 databaseRef.child("Auth").child("AllUsers").child(user.uid).child("Username").setValue(name)
                 databaseRef.child("Auth").child("AllUsers").child(user.uid).child("UserID").setValue(flag)
                 startActivity(Intent(this,Admindashboard::class.java))
+                finish()
             }
 
     }
 
     fun olduser(v: View) {
         startActivity(Intent(this, LoginPage::class.java))
+        finish()
     }
 
     fun Signupstd(v: View) {
@@ -107,6 +133,7 @@ class SignUp : AppCompatActivity() {
         } else if (passwordtext.text.toString() != confpasstext.text.toString()) {
             Toast.makeText(this, "Passwords Doesn't Match!", Toast.LENGTH_LONG).show()
         } else {
+            spinner.visibility = View.VISIBLE       //Make spinner visible
             email = emailtext.text.toString()
             password = passwordtext.text.toString()
             name = nametext.text.toString()
@@ -122,6 +149,7 @@ class SignUp : AppCompatActivity() {
             } else if (passwordtext.text.toString() != confpasstext.text.toString()) {
                 Toast.makeText(this, "Passwords Doesn't Match!", Toast.LENGTH_LONG).show()
             } else {
+                spinner.visibility = View.VISIBLE       //Make spinner visible
                 email = emailtext.text.toString()
                 password = passwordtext.text.toString()
                 name = nametext.text.toString()
@@ -129,4 +157,19 @@ class SignUp : AppCompatActivity() {
             }
 
         }
+
+    //Code for informing and closing app
+    private var exit = false
+    override fun onBackPressed() {
+        if (exit) {
+            finish() // finish activity
+        } else {
+            Toast.makeText(
+                this, "Press Back again to Exit.",
+                Toast.LENGTH_SHORT
+            ).show()
+            exit = true
+            Handler().postDelayed(Runnable { exit = false }, 3 * 1000)
+        }
+    }
 }

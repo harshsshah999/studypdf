@@ -1,12 +1,14 @@
 package com.app.hardik.studypdf
 //Splashscreen
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 
@@ -19,6 +21,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //Declaration of variable for first time run
+        val isFirstRun =
+            getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE)
+                .getBoolean("isFirstRun", true)
+
             //Assigning ID's of Views to Variables
             logo = findViewById(R.id.logo)
 
@@ -30,8 +38,22 @@ class MainActivity : AppCompatActivity() {
             override fun onAnimationStart(animation: Animation) {
             }
             override fun onAnimationEnd(animation: Animation) {
-                startActivity(Intent(this@MainActivity, Introscreen::class.java))
-                // userscreen.class is the activity to go after showing the splash screen.
+
+                //Shared Preference Used here
+                if (isFirstRun) {
+                    //Open acivity only once
+                    startActivity(Intent(this@MainActivity, Introscreen::class.java))
+                    finish()
+                }
+                //Else opens next activity
+                else{
+                    startActivity(Intent(this@MainActivity, LoginPage::class.java))
+                    finish()
+                }
+
+                getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE).edit()
+                    .putBoolean("isFirstRun", false).commit()
+
             }
             override fun onAnimationRepeat(animation: Animation) {
             }

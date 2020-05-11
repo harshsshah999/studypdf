@@ -1,12 +1,14 @@
 package com.app.hardik.studypdf
 
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
+import androidx.annotation.RequiresApi
 
 class Introscreen : AppCompatActivity() {
 
@@ -99,6 +101,7 @@ class Introscreen : AppCompatActivity() {
         //Skip button function
         fun gotologin (){
             startActivity(Intent(this,LoginPage::class.java))
+            finish()
         }
         //seekbar class creation
         seek?.setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener{
