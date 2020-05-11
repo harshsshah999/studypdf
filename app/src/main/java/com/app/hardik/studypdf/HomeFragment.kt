@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.firebase.database.*
 import java.util.*
@@ -16,6 +17,9 @@ import java.util.*
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 lateinit var dbref: DatabaseReference
+//lateinit var userno : TextView
+lateinit var downloadno : TextView
+lateinit var revenueno : TextView
 
 /**
  * A simple [Fragment] subclass.
@@ -39,7 +43,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        dbref = FirebaseDatabase.getInstance().getReference("Transactions")
+        dbref = FirebaseDatabase.getInstance().getReference()
         var view = inflater.inflate(R.layout.fragment_home, container, false)
         var customers = ArrayList<String>()
         var adapter = ArrayAdapter<String>(context,
@@ -47,8 +51,9 @@ class HomeFragment : Fragment() {
             customers
             )
        var transactionData = view.findViewById<ListView>(R.id.transactions)
+        var userno = view!!.findViewById<TextView>(R.id.userno)
         transactionData.adapter = adapter
-        dbref.addChildEventListener(object : ChildEventListener{
+        dbref.child("Transactions").addChildEventListener(object : ChildEventListener{
             override fun onCancelled(p0: DatabaseError) {
             }
 
@@ -67,6 +72,21 @@ class HomeFragment : Fragment() {
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
+            }
+
+        })
+        dbref.child("Users").child("Students").addValueEventListener(object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()){
+                    userno.text = p0.childrenCount.toString()
+                }
+                else {
+                    userno.text = "NA"
+                }
             }
 
         })

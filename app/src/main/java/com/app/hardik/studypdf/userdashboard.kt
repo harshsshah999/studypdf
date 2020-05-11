@@ -9,6 +9,7 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import kotlin.random.Random
 
 class userdashboard : AppCompatActivity() {
     lateinit var database: FirebaseDatabase
@@ -56,11 +57,14 @@ class userdashboard : AppCompatActivity() {
 
     }
     fun pdfwrite(pdf:String,value:String){
-        databaseReference.child("Transactions").child(user!!.uid).child("name").setValue(name)
-        databaseReference.child("Transactions").child(user!!.uid).child("pdf").setValue(pdf)
-        databaseReference.child("Transactions").child(user!!.uid).child("value").setValue(value)
+        var rand : String
+        rand = Random.nextInt(100,10000).toString()
+        databaseReference.child("Transactions").child("Transactions ID :- "+rand).child("name").setValue(name)
+        databaseReference.child("Transactions").child("Transactions ID :- "+rand).child("pdf").setValue(pdf)
+        databaseReference.child("Transactions").child("Transactions ID :- "+rand).child("value").setValue(value)
 
     }
+
     fun onClick(v: View){
         when (v.id){
             R.id.SE ->pdfwrite("SE","50 RS")
