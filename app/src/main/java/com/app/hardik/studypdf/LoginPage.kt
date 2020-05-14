@@ -32,6 +32,8 @@ class LoginPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_page)
 
+
+
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
 
@@ -160,6 +162,10 @@ class LoginPage : AppCompatActivity() {
             Handler().postDelayed(Runnable { exit = false }, 3 * 1000)
         }
     }
+
+
+
+
 
 
 }

@@ -17,7 +17,6 @@ import java.util.*
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 lateinit var dbref: DatabaseReference
-//lateinit var userno : TextView
 lateinit var downloadno : TextView
 lateinit var revenueno : TextView
 
@@ -44,6 +43,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         dbref = FirebaseDatabase.getInstance().getReference()
+        //Copy return statement and store it in new variable "View"
         var view = inflater.inflate(R.layout.fragment_home, container, false)
         var customers = ArrayList<String>()
         var adapter = ArrayAdapter<String>(context,
@@ -51,6 +51,8 @@ class HomeFragment : Fragment() {
             customers
             )
        var transactionData = view.findViewById<ListView>(R.id.transactions)
+        //downloadno = view.findViewById(R.id.downloadno)
+       // transactionData.addHeaderView(downloadno)
         var userno = view!!.findViewById<TextView>(R.id.userno)
         transactionData.adapter = adapter
         dbref.child("Transactions").addChildEventListener(object : ChildEventListener{
@@ -72,6 +74,7 @@ class HomeFragment : Fragment() {
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
+
             }
 
         })

@@ -18,6 +18,7 @@ lateinit var bottomNavigation: BottomNavigationView
         bottomNavigation = findViewById(R.id.bottom_navigation)
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener)
         openFragment(HomeFragment.newInstance("", ""));
+
     }
     fun openFragment(fragment: Fragment) {
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()

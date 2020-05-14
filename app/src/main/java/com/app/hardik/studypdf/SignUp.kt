@@ -79,14 +79,14 @@ class SignUp : AppCompatActivity() {
                 } else if (task.exception.toString() == "com.google.firebase.auth.FirebaseAuthInvalidCredentialsException: The email address is badly formatted.") {
                     spinner.visibility = View.GONE      //Make spinner Gone
                     // If sign in fails, display a message to the user.
-                    Log.i("Error of", task.exception.toString())
+                   // Log.i("Error of", task.exception.toString())
                     Toast.makeText(
                         baseContext, "Email Address is Invalid!",
                         Toast.LENGTH_LONG
                     ).show()
                 } else if (task.exception.toString() == "com.google.firebase.auth.FirebaseAuthWeakPasswordException: The given password is invalid. [ Password should be at least 6 characters ]") {
                     spinner.visibility = View.GONE      //Make spinner Gone
-                    Log.i("Error of", task.exception.toString())
+                   // Log.i("Error of", task.exception.toString())
                     Toast.makeText(
                         baseContext, "Password is too Small! (At least 6 characters)",
                         Toast.LENGTH_LONG
