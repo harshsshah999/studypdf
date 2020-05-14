@@ -6,5 +6,8 @@
     <string name="intro_text">Introtxt</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="fragment_user_home">Home</string>
+    <string name="fragment_search">Search</string>
+    <string name="fragment_my_pdf">My PDF</string>
+    <string name="fragment_user_profile">Profile</string>
 </resources>

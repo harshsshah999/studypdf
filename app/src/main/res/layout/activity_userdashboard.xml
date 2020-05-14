@@ -6,43 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".userdashboard">
 
-    <Button
-        android:id="@+id/CSS"
-        android:layout_width="391dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="25dp"
-        android:onClick="onClick"
-        android:text="CSS PDF = 90 RS"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SPCC" />
-
-    <Button
-        android:id="@+id/SPCC"
-        android:layout_width="391dp"
-        android:layout_height="0dp"
-        android:onClick="onClick"
-        android:text="SPCC PDF =  70 RS"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/CSS"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TCS" />
-
-    <Button
-        android:id="@+id/TCS"
-        android:layout_width="391dp"
-        android:layout_height="0dp"
-        android:onClick="onClick"
-        android:text="TCS PDF = 100 RS"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/SPCC"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SE" />
-
     <TextView
         android:id="@+id/welcome"
         android:layout_width="310dp"
@@ -57,16 +20,22 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.044" />
 
-    <Button
-        android:id="@+id/SE"
-        android:layout_width="391dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="290dp"
-        android:onClick="onClick"
-        android:text="SE PDF = 50 Rs"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/TCS"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/container"
+        >
+        <!-- Main content -->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/colorPrimary"
+            app:itemIconTint="@color/white"
+            app:itemTextColor="@color/white"
+            app:menu="@menu/bottom_navigation_menu_user"
+            />
+    </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,10 +2,14 @@ package com.app.hardik.studypdf
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -18,12 +22,7 @@ class userdashboard : AppCompatActivity() {
     lateinit var name : String
     lateinit var helloname : TextView
     var user : FirebaseUser? = null
-
-    //Scrap Buttons
-    lateinit var se : Button
-    lateinit var spcc : Button
-    lateinit var tcs : Button
-    lateinit var css : Button
+    lateinit var bottomNavigation: BottomNavigationView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,39 +41,42 @@ class userdashboard : AppCompatActivity() {
                  name = p0.value.toString()
                 helloname.text ="Welcome " + name
             }
-
         })
 
-
-
-
-        //Testing Code , Need to be Scrapped after testing. Buttons will NOT be the options for the PDF's.
-        // We will have a ListView for that
-        se = findViewById(R.id.SE)
-        spcc = findViewById(R.id.SPCC)
-        tcs = findViewById(R.id.TCS)
-        css = findViewById(R.id.CSS)
+        bottomNavigation = findViewById(R.id.bottom_navigation)
+        bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener)
+        helloname.visibility = View.GONE
+        openFragment(UserHomeFragment.newInstance("", ""));
 
     }
-    fun pdfwrite(pdf:String,value:String){
-        var rand : String
-        rand = Random.nextInt(100,10000).toString()
-        databaseReference.child("Transactions").child("Transactions ID :- "+rand).child("name").setValue(name)
-        databaseReference.child("Transactions").child("Transactions ID :- "+rand).child("pdf").setValue(pdf)
-        databaseReference.child("Transactions").child("Transactions ID :- "+rand).child("value").setValue(value)
-
+    fun openFragment(fragment: Fragment) {
+        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
-
-    fun onClick(v: View){
-        when (v.id){
-            R.id.SE ->pdfwrite("SE","50 RS")
-            R.id.SPCC ->pdfwrite("SPCC","70 RS")
-            R.id.TCS ->pdfwrite("TCS","100 RS")
-            R.id.CSS ->pdfwrite("CSS","90 RS")
-            else -> {
-
+    var navigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener? =
+        object : BottomNavigationView.OnNavigationItemSelectedListener {
+            override fun onNavigationItemSelected(item: MenuItem): Boolean {
+                when (item.getItemId()) {
+                    R.id.navigation_userhome -> {
+                        openFragment(UserHomeFragment.newInstance("", ""))
+                        return true
+                    }
+                    R.id.navigation_search -> {
+                        openFragment(SearchFragment.newInstance("", ""))
+                        return true
+                    }
+                    R.id.navigation_mypdf -> {
+                        openFragment(MyPdfFragment.newInstance("", ""))
+                        return true
+                    }
+                    R.id.navigation_profile -> {
+                        openFragment(UserProfileFragment.newInstance("", ""))
+                        return true
+                    }
+                }
+                return false
             }
         }
-        Toast.makeText(applicationContext,"PDF Bought Successfully",Toast.LENGTH_SHORT).show()
-    }
 }
