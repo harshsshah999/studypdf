@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">studypdf</string>
+    <string name="app_name">StudyPDF</string>
+    <string name="Skip_button">SKIP</string>
+    <string name="next_button">NEXT</string>
+    <string name="intro_image">Introimg</string>
+    <string name="intro_text">Introtxt</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="fragment_user_home">Home</string>
+    <string name="fragment_search">Search</string>
+    <string name="fragment_my_pdf">My PDF</string>
+    <string name="fragment_user_profile">Profile</string>
 </resources>

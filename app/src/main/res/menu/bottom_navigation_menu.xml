@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/ic_appintro_done_white"
+        android:title="Settings" />
+    <item
+        android:id="@+id/navigation_upload"
+        android:icon="@drawable/ic_appintro_arrow_forward_white"
+        android:title="UploadPDF" />
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_appintro_arrow_back_white"
+        android:title="Home" />
+    <item
+        android:id="@+id/navigation_list"
+        android:icon="@drawable/ic_appintro_navigate_before_white"
+        android:title="List" />
+    <item
+        android:id="@+id/navigation_users"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:title="Users" />
+
+</menu>
