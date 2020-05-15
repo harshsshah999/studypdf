@@ -6,4 +6,5 @@
     tools:context=".ListFragment">
 
     <include layout="@layout/content_list" />
+
 </FrameLayout>

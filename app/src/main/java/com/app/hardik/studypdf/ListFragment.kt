@@ -1,16 +1,21 @@
 package com.app.hardik.studypdf
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.multilevelview.MultiLevelRecyclerView
 import com.multilevelview.models.RecyclerViewItem
 import com.app.hardik.studypdf.Item
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -32,6 +37,7 @@ class ListFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -47,6 +53,8 @@ class ListFragment : Fragment() {
         // Inflate the layout for this fragment
         //Copy return statement and store it in new variable "View"
 
+
+
         var view = inflater.inflate(R.layout.fragment_list, container, false)
         val multiLevelRecyclerView =
             view.findViewById(R.id.rv_list) as MultiLevelRecyclerView
@@ -56,6 +64,7 @@ class ListFragment : Fragment() {
 
         //Level 0
         var itemList  = ArrayList<RecyclerViewItem>() as MutableList<Item>
+
         var item1 = Item(0)
         item1.setText("Engineering")
         var item2 = Item(0)
@@ -107,7 +116,6 @@ class ListFragment : Fragment() {
         val myAdapter = MyAdapter(view.context, itemList, multiLevelRecyclerView)
 
         multiLevelRecyclerView.adapter = myAdapter
-
 
         return view
     }
