@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,8 +16,9 @@ import com.multilevelview.models.RecyclerViewItem
 import com.app.hardik.studypdf.Item
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.content_list.view.*
 import kotlinx.android.synthetic.main.fragment_list.*
-import java.util.*
+import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlin.collections.ArrayList
 
 
@@ -54,16 +56,15 @@ class ListFragment : Fragment() {
         //Copy return statement and store it in new variable "View"
 
 
-
-        var view = inflater.inflate(R.layout.fragment_list, container, false)
+        var view = inflater.inflate(R.layout.content_list, container, false)
         val multiLevelRecyclerView =
             view.findViewById(R.id.rv_list) as MultiLevelRecyclerView
         multiLevelRecyclerView.layoutManager = LinearLayoutManager(this.context)
 
-       // (IGNORE THIS) val itemList  = recursivePopulateFakeData(0, 12) as MutableList<Item>
+        // (IGNORE THIS) val itemList  = recursivePopulateFakeData(0, 12) as MutableList<Item>
 
         //Level 0
-        var itemList  = ArrayList<RecyclerViewItem>() as MutableList<Item>
+        var itemList = ArrayList<RecyclerViewItem>() as MutableList<Item>
 
         var item1 = Item(0)
         item1.setText("Engineering")
@@ -71,7 +72,7 @@ class ListFragment : Fragment() {
         item2.setText("Medical")
 
         //Level 1
-        var subitemList  = ArrayList<RecyclerViewItem>() as MutableList<Item>
+        var subitemList = ArrayList<RecyclerViewItem>() as MutableList<Item>
         var subitem1 = Item(1)
         subitem1.setText("Computer Engineering")
         var subitem2 = Item(1)
@@ -83,7 +84,7 @@ class ListFragment : Fragment() {
         subitemList.add(subitem3)
 
         //Level 2
-        var subsubitemList  = ArrayList<RecyclerViewItem>() as MutableList<Item>
+        var subsubitemList = ArrayList<RecyclerViewItem>() as MutableList<Item>
         var subsubitem1 = Item(2)
         subsubitem1.setText("SEM 1")
         var subsubitem2 = Item(2)
@@ -95,7 +96,7 @@ class ListFragment : Fragment() {
         subsubitemList.add(subsubitem3)
 
         //Level 3
-        var subsubsubitemList  = ArrayList<RecyclerViewItem>() as MutableList<Item>
+        var subsubsubitemList = ArrayList<RecyclerViewItem>() as MutableList<Item>
         var subsubsubitem1 = Item(3)
         subsubsubitem1.setText("Applied Physics I")
         var subsubsubitem2 = Item(3)
@@ -117,8 +118,32 @@ class ListFragment : Fragment() {
 
         multiLevelRecyclerView.adapter = myAdapter
 
-        return view
+        view.add.setOnClickListener {
+            //add
+
+          /*  var itemsubList = ArrayList<RecyclerViewItem>() as MutableList<Item>
+        var item = Item(0)
+        item.setText("Management")
+            var itemsub = Item(1)
+            itemsub.setText("Project Management")
+            itemsubList.add(itemsub)
+            item.addChildren(itemsubList as MutableList<RecyclerViewItem>)
+            itemList.add(item)
+            myAdapter.notifyDataSetChanged()*/
+
+            //remove
+
+            /* itemList.remove(item1)
+            myAdapter.notifyDataSetChanged() */
     }
+        return view
+
+    }
+   /* fun addtolist(v:View){
+        var item = Item(0)
+        item.setText("Politics")
+        itemList
+    } */
 
     //IGNORE THIS
     /*private fun recursivePopulateFakeData(
