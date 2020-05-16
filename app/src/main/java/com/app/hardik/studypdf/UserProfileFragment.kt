@@ -1,5 +1,7 @@
 package com.app.hardik.studypdf
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,10 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -38,6 +37,7 @@ class UserProfileFragment : Fragment() {
     lateinit var education_edittext : EditText
     lateinit var education_textview : TextView
     lateinit var education_value : String
+    lateinit var logout : Button
     private lateinit var spinner: ProgressBar
 
     var user : FirebaseUser? = null
@@ -65,6 +65,7 @@ class UserProfileFragment : Fragment() {
         education_edittext = view.findViewById(R.id.EducationEditText)
         education_textview = view.findViewById(R.id.EducationTextView)
         spinner = view.findViewById(R.id.progressBar1)
+        logout = view.findViewById(R.id.logout)
         database = FirebaseDatabase.getInstance()
         databaseReference = database.getReference()
         userauth = FirebaseAuth.getInstance()
@@ -75,6 +76,14 @@ class UserProfileFragment : Fragment() {
 
         view.setOnClickListener{
             it.hideKeyboard()
+        }
+
+        logout.setOnClickListener {
+            activity!!.getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
+                .putBoolean("isLoggedin", false).apply()
+            activity!!.getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
+                .putString("Flag","Null").apply()
+            startActivity(Intent(view.context,LoginPage::class.java))
         }
 
         databaseReference.child("Users").child("Students").child(user!!.uid).addListenerForSingleValueEvent(object :

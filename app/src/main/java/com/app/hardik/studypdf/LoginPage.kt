@@ -1,5 +1,6 @@
 package com.app.hardik.studypdf
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -116,6 +117,11 @@ class LoginPage : AppCompatActivity() {
             override fun onDataChange(p0: DataSnapshot) {
                 val flag = p0.value.toString()
                 //Log.i("flagID",flag)
+
+                getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
+                    .putBoolean("isLoggedin", true).apply()
+                getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
+                    .putString("Flag",flag).apply()
                 if(flag=="1") {
                     startActivity(Intent(this@LoginPage, userdashboard::class.java))
                     finish()

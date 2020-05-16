@@ -36,6 +36,7 @@ public class MyAdapter extends MultiLevelAdapter {
 
     private void setExpandButton(ImageView expandButton, boolean isExpanded) {
         // set the icon based on the current state
+        Log.i("Expanded",String.valueOf(isExpanded));
         expandButton.setImageResource(isExpanded ? R.drawable.ic_keyboard_arrow_down_black_24dp : R.drawable.ic_keyboard_arrow_up_black_24dp);
     }
 
