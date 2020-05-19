@@ -122,7 +122,7 @@ class UsersFragment : Fragment() {
         })
 
 
-        //Creating Cards
+        //Creating Cards In view
         Handler().postDelayed({
             count = menu.indexOfFirst { true }
             last  = menu.indexOfLast { true }
