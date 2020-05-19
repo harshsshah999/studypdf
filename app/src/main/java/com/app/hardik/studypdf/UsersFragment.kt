@@ -1,9 +1,13 @@
 package com.app.hardik.studypdf
 
 import android.app.ActionBar
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.Handler
+import android.text.method.TextKeyListener.clear
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,20 +16,40 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.view.get
+import androidx.fragment.app.Fragment
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_users.*
+import kotlinx.android.synthetic.main.fragment_users.view.*
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-
+var menu = mutableListOf<Any>()         //List of usernames from Users
+var email = mutableListOf<Any>()        //List of emails from Users
+var costs = mutableListOf<Any>()        //List of costs from transaction
+var finalcost = mutableListOf<Any>()    //List of total cost per usernames
+var costname = mutableListOf<Any>()     //List of usernames from transaction
+var pdf = mutableListOf<Any>()          //List of pdf's from transaction
+var position: Int = 0                   //positon of card clicked
 /**
  * A simple [Fragment] subclass.
  * Use the [UsersFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class UsersFragment : Fragment() {
-    lateinit var create : Button
+    lateinit var database: FirebaseDatabase
+    lateinit var databaseReference: DatabaseReference
+    var count: Int = 0
+    var last: Int = 0
+    var costnamefirst: Int = 0
+    var costnamelast: Int = 0
+    lateinit var names: String
+    lateinit var emails: String
+    var cost: Int = 0
+    lateinit var revenue: String
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -45,59 +69,71 @@ class UsersFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view: View = inflater!!.inflate(R.layout.fragment_users, container, false)
-        create=view.findViewById(R.id.createcard)
-        // Set a click listener for button widget
-        create.setOnClickListener{
-
-            // Initialize a new CardView instance
-            val card_view = CardView(view?.context)
-
-            // Initialize a new LayoutParams instance, CardView width and height
-            val layoutParams = ActionBar.LayoutParams(
-                ActionBar.LayoutParams.MATCH_PARENT, // CardView width
-                ActionBar.LayoutParams.WRAP_CONTENT // CardView height
-            )
-
-            // Set bottom margin for card view
-            layoutParams.bottomMargin = 50
-
-            // Set the card view layout params
-            card_view.layoutParams = layoutParams
-
-            // Set the card view corner radius
-            card_view.radius = 12F
-
-            // Set the card view content padding
-            card_view.setContentPadding(25,25,25,25)
-
-            // Set the card view background color
-            card_view.setCardBackgroundColor(Color.LTGRAY)
-
-            // Set card view elevation
-            card_view.cardElevation = 8F
-
-            // Set card view maximum elevation
-            card_view.maxCardElevation = 12F
-
-            // Set a click listener for card view
-            card_view.setOnClickListener{
-                Toast.makeText(
-                    view.context,
-                    "Card clicked.",
-                    Toast.LENGTH_SHORT).show()
+        database = FirebaseDatabase.getInstance()
+        databaseReference = database.getReference()
+        databaseReference.child("Users").child("Students").addValueEventListener(object :
+            ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
             }
+            override fun onDataChange(p0: DataSnapshot) {
+                //Saves usernames in menu list
+                p0.children.mapNotNullTo(menu) {
+                        it.child("Username").value
+                }
+                //Saves emails in email list
+                p0.children.mapNotNullTo(email) {
+                    it.child("Email").value
+                }
+            }
+        })
+        databaseReference.child("Transactions").addValueEventListener(object :
+            ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+            override fun onDataChange(p0: DataSnapshot) {
+                p0.children.mapNotNullTo(costs) {
+                    it.child("value").value
+                }
+                p0.children.mapNotNullTo(costname) {
+                    it.child("name").value
+                }
+                p0.children.mapNotNullTo(pdf) {
+                    it.child("pdf").value
+                }
 
-            // Add an ImageView to the CardView
-            card_view.addView(generateImageView())
-            card_view.addView(generatename())
-            card_view.addView(generatetitle())
-            card_view.addView(generatedate())
-            card_view.addView(generateprice())
+                // Calculation of total cost
+                count = menu.indexOfFirst { true }
+                last  = menu.indexOfLast { true }
+                while (count <= last){
+                    costnamefirst = costname.indexOfFirst { true }
+                    costnamelast = costname.indexOfLast { true }
+                    while ( costnamefirst <= costnamelast ){
+                        if (costname.get(costnamefirst) == menu.get(count))
+                        {
+                            cost += Integer.parseInt(costs.get(costnamefirst).toString())
+                        }
+                        costnamefirst += 1
+                    }
+                    finalcost.add(count,cost)
+                    cost = 0
+                    count += 1
+                }
+            }
+        })
 
-            // Finally, add the CardView in root layout
-            root2.addView(card_view)
-        }
 
+
+        Handler().postDelayed({
+            count = menu.indexOfFirst { true }
+            last  = menu.indexOfLast { true }
+            while (count <= last){
+                names = menu.get(count).toString()
+                emails = email.get(count).toString()
+                revenue = finalcost.get(count).toString()
+                new()
+                count = count + 1
+            }
+        }, 1000)
         return view
     }
 
@@ -121,6 +157,54 @@ class UsersFragment : Fragment() {
             }
     }
 
+    fun new() {
+        // Initialize a new CardView instance
+        val card_view = CardView(view!!.context)
+        card_view.id = count
+
+        // Initialize a new LayoutParams instance, CardView width and height
+        val layoutParams = ActionBar.LayoutParams(
+            ActionBar.LayoutParams.MATCH_PARENT, // CardView width
+            ActionBar.LayoutParams.WRAP_CONTENT // CardView height
+        )
+
+        // Set bottom margin for card view
+        layoutParams.bottomMargin = 50
+
+        // Set the card view layout params
+        card_view.layoutParams = layoutParams
+
+        // Set the card view corner radius
+        card_view.radius = 12F
+
+        // Set the card view content padding
+        card_view.setContentPadding(25, 25, 25, 25)
+
+        // Set the card view background color
+        card_view.setCardBackgroundColor(Color.LTGRAY)
+
+        // Set card view elevation
+        card_view.cardElevation = 20F
+
+        // Set card view maximum elevation
+        card_view.maxCardElevation = 12F
+
+        // Set a click listener for card view
+        card_view.setOnClickListener {
+            position = card_view.id
+            startActivity(Intent(view!!.context,ExpandCard::class.java))
+        }
+
+        // Add an ImageView to the CardView
+        card_view.addView(generateImageView())
+        card_view.addView(generatename())
+        card_view.addView(generateemail())
+        card_view.addView(generateprice())
+
+        // Finally, add the CardView in root layout
+        root2.addView(card_view)
+    }
+
     // Custom method to generate an image view
     private fun generateImageView(): ImageView {
         val imageView = ImageView(view?.context)
@@ -136,34 +220,25 @@ class UsersFragment : Fragment() {
         val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT )
         params.leftMargin = 300
         textView.layoutParams = params
-        textView.text = "Abhishek"
+        textView.text = names
         textView.textSize = 22F
         return textView
     }
-    private fun generatetitle(): TextView {
+    private fun generateemail(): TextView {
         val textView = TextView(view?.context)
         val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT )
-        params.setMargins(300,70,0,0)
+        params.setMargins(300,100,0,0)
         textView.layoutParams = params
-        textView.text = "SPCC.pdf"
-        textView.textSize = 20F
-        return textView
-    }
-    private fun generatedate(): TextView {
-        val textView = TextView(view?.context)
-        val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT )
-        params.setMargins(300,210,0,0)
-        textView.layoutParams = params
-        textView.text = "20/2/2020"
-        textView.textSize = 20F
+        textView.text =  emails
+        textView.textSize = 16F
         return textView
     }
     private fun generateprice(): TextView {
         val textView = TextView(view?.context)
         val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT )
-        params.setMargins(300,140,0,0)
+        params.setMargins(300,200,0,0)
         textView.layoutParams = params
-        textView.text = "Price : 40 Rs"
+        textView.text = "Revenue: " + revenue
         textView.textSize = 20F
         return textView
     }

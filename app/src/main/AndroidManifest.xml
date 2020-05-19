@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddIntoList"></activity>
+        <activity android:name=".ExpandCard"></activity>
+        <activity android:name=".AddIntoList" />
         <activity android:name=".Admindashboard" />
         <activity android:name=".userdashboard" />
         <activity android:name=".SignUp" />
