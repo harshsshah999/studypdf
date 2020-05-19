@@ -122,7 +122,7 @@ class UsersFragment : Fragment() {
         })
 
 
-
+        //Creating Cards
         Handler().postDelayed({
             count = menu.indexOfFirst { true }
             last  = menu.indexOfLast { true }
