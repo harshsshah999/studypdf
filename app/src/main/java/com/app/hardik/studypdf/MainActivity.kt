@@ -22,7 +22,8 @@ import com.google.firebase.database.*
 class MainActivity : AppCompatActivity() {
 
             //Global declaration of variables
-            lateinit var anim : Animation
+            lateinit var anim_fade_in : Animation
+            lateinit var anim_fade_out : Animation
             lateinit var logo : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,10 +42,21 @@ class MainActivity : AppCompatActivity() {
             logo = findViewById(R.id.logo)
 
             //Create Animation
-            anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in)
+            anim_fade_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in)
+            anim_fade_out = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out)
 
             //Animation Class functions
-            anim.setAnimationListener(object : AnimationListener {
+            anim_fade_out.setAnimationListener(object : AnimationListener {
+                override fun onAnimationStart(animation: Animation) {
+                }
+                override fun onAnimationEnd(animation: Animation) {
+                        logo.setImageResource(R.drawable.opened_book)
+                        logo.startAnimation(anim_fade_in)
+                }
+                override fun onAnimationRepeat(animation: Animation) {
+                }
+            })
+            anim_fade_in.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation) {
             }
             override fun onAnimationEnd(animation: Animation) {
@@ -100,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         })
 
             //Trigger Animation
-            logo.startAnimation(anim)
+            logo.startAnimation(anim_fade_out)
     }
 
     fun isOnline(context: Context): Boolean {
