@@ -108,6 +108,7 @@ class SignUp : AppCompatActivity() {
                 databaseRef.child("Users").child("Students").child(user.uid).child("Email").setValue(email)
                 databaseRef.child("Auth").child("AllUsers").child(user.uid).child("Username").setValue(name)
                 databaseRef.child("Auth").child("AllUsers").child(user.uid).child("UserID").setValue(flag)
+
                 startActivity(Intent(this,userdashboard::class.java))
                 finish()
             }

@@ -1,10 +1,7 @@
 package com.app.hardik.studypdf
 
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -46,6 +43,7 @@ class AddIntoList : AppCompatActivity() {
 
             databaseRef.child("StreamList").child(Streamval).child(Departmentval)
                 .child(Semesterval).child(Subjectval).setValue(Subjectval)
+            Toast.makeText(this,"Added Successfully",Toast.LENGTH_LONG).show()
         }
         Delete.setOnClickListener {
 
@@ -56,6 +54,7 @@ class AddIntoList : AppCompatActivity() {
 
             databaseRef.child("StreamList").child(Streamval).child(Departmentval)
                 .child(Semesterval).child(Subjectval).setValue(null)
+            Toast.makeText(this,"Deleted Successfully",Toast.LENGTH_LONG).show()
         }
     }
 }

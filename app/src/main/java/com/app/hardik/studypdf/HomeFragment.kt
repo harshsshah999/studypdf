@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.firebase.database.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,6 +47,7 @@ class HomeFragment : Fragment() {
         //Copy return statement and store it in new variable "View"
         var view = inflater.inflate(R.layout.fragment_home, container, false)
         var customers = ArrayList<String>()
+        var keyarray = ArrayList<String>()
         var adapter = ArrayAdapter<String>(context,
             android.R.layout.simple_list_item_1,
             customers
@@ -67,8 +69,13 @@ class HomeFragment : Fragment() {
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 var values = p0.getValue(Transactions::class.java).toString()
-                Log.i("datasnap",p0.toString())
+               // Log.i("datasnap",p0.toString())
                 customers.add(values)
+                keyarray.add(p0.key.toString())
+
+                //Log.i("datasnapcust",customers.toString())
+                //Log.i("datasnapkey",keyarray.toString())
+
                 adapter.notifyDataSetChanged()
 
             }
