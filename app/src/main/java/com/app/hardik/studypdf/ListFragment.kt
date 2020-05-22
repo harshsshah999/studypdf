@@ -31,7 +31,7 @@ private const val ARG_PARAM2 = "param2"
 object Apple {
     var updateClicked : Int = 0
 }
-
+//Ritesh
 class ListFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
