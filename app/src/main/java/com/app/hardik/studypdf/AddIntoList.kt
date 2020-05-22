@@ -28,7 +28,7 @@ class AddIntoList : AppCompatActivity() {
         val Semester = findViewById<EditText>(R.id.SemeditText)
         val Subject = findViewById<EditText>(R.id.SubeditText)
         val Done = findViewById<Button>(R.id.Done)
-        val Delete = findViewById<Button>(R.id.Delete)
+      //  val Delete = findViewById<Button>(R.id.Delete)
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
@@ -36,16 +36,21 @@ class AddIntoList : AppCompatActivity() {
         databaseRef = database.getReference()
         Done.setOnClickListener {
 
-            Departmentval = Department.text.toString()
-            Streamval = Stream.text.toString()
-            Semesterval = Semester.text.toString()
-            Subjectval = Subject.text.toString()
-
+            Departmentval = Department.text.toString().trim()
+            Streamval = Stream.text.toString().trim()
+            Semesterval = Semester.text.toString().trim()
+            Subjectval = Subject.text.toString().trim()
+            if(Departmentval.isNullOrEmpty() || Streamval.isNullOrEmpty() || Semesterval.isNullOrEmpty() || Subjectval.isNullOrEmpty() ){
+                Toast.makeText(this,"You Can't Leave a Field Empty!",Toast.LENGTH_SHORT).show()
+            }
+            else {
             databaseRef.child("StreamList").child(Streamval).child(Departmentval)
                 .child(Semesterval).child(Subjectval).setValue(Subjectval)
             Toast.makeText(this,"Added Successfully",Toast.LENGTH_LONG).show()
+                }
+
         }
-        Delete.setOnClickListener {
+       /* Delete.setOnClickListener {
 
             Departmentval = Department.text.toString()
             Streamval = Stream.text.toString()
@@ -55,6 +60,6 @@ class AddIntoList : AppCompatActivity() {
             databaseRef.child("StreamList").child(Streamval).child(Departmentval)
                 .child(Semesterval).child(Subjectval).setValue(null)
             Toast.makeText(this,"Deleted Successfully",Toast.LENGTH_LONG).show()
-        }
+        } */
     }
 }

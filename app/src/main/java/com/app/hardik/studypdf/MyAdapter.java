@@ -3,6 +3,7 @@ package com.app.hardik.studypdf;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.Selection;
@@ -167,12 +168,22 @@ public class MyAdapter extends MultiLevelAdapter {
                 public void onClick(View v) {
                     //set click event on item here
                    // Toast.makeText(mContext, String.format(Locale.ENGLISH, "Item at position %d was clicked!", getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                   if(Apple.INSTANCE.getUpdateClicked() == 1){
+                       if(mListItems.get(getAdapterPosition()).getText().equals("New +")){
+                           Intent in = new Intent(v.getRootView().getContext(),AddIntoList.class);
+                           in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                           v.getRootView().getContext().startActivity(in);
+                       }
+                   }
                 }
             });
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+                    if (mListItems.get(getAdapterPosition()).getText().equals("New +")|| mListItems.get(getAdapterPosition()).getText().equals("All Available Categories")){
+                        return false;
+                    }
                     AlertDialog.Builder alert = new AlertDialog.Builder(v.getRootView().getContext());
                     int level = mListItems.get(getAdapterPosition()).getLevel();
                     String currentName = mListItems.get(getAdapterPosition()).text;
@@ -231,6 +242,7 @@ public class MyAdapter extends MultiLevelAdapter {
 
                     }
                     else if (Apple.INSTANCE.getUpdateClicked() == 1){
+
                         final String finalPath2 = path+"/";
                         alert.setTitle("Adding new element...");
                         alert.setMessage("New element will be added under selected element!");

@@ -67,6 +67,15 @@ class ListFragment : Fragment() {
         StreamList = ArrayList<RecyclerViewItem>() as MutableList<Item>
         var item = Item(0)
         item.setText("All Available Categories")
+        item.setSecondText("")
+        if(Apple.updateClicked == 1){
+            item.setText("New +")
+            item.setSecondText("If You are adding New ROOT element Or for custom add Click here")
+        }
+        else{
+            item.setText("All Available Categories")
+            item.setSecondText("")
+        }
         StreamList.add(item)
         db= FirebaseDatabase.getInstance()
         dbrefer=db.getReference()
