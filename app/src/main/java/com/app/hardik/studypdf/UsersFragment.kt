@@ -27,28 +27,17 @@ import kotlinx.android.synthetic.main.fragment_users.view.*
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-var menu = mutableListOf<Any>()         //List of usernames from Users
-var email = mutableListOf<Any>()        //List of emails from Users
-var costs = mutableListOf<Any>()        //List of costs from transaction
-var finalcost = mutableListOf<Any>()    //List of total cost per usernames
-var costname = mutableListOf<Any>()     //List of usernames from transaction
-var pdf = mutableListOf<Any>()          //List of pdf's from transaction
-var position: Int = 0                   //positon of card clicked
+
 /**
  * A simple [Fragment] subclass.
  * Use the [UsersFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class UsersFragment : Fragment() {
-    lateinit var database: FirebaseDatabase
-    lateinit var databaseReference: DatabaseReference
     var count: Int = 0
     var last: Int = 0
-    var costnamefirst: Int = 0
-    var costnamelast: Int = 0
     lateinit var names: String
     lateinit var emails: String
-    var cost: Int = 0
     lateinit var revenue: String
 
     // TODO: Rename and change types of parameters
@@ -69,58 +58,6 @@ class UsersFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view: View = inflater!!.inflate(R.layout.fragment_users, container, false)
-        database = FirebaseDatabase.getInstance()
-        databaseReference = database.getReference()
-        databaseReference.child("Users").child("Students").addValueEventListener(object :
-            ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-            override fun onDataChange(p0: DataSnapshot) {
-                //Saves usernames in menu list
-                p0.children.mapNotNullTo(menu) {
-                        it.child("Username").value
-                }
-                //Saves emails in email list
-                p0.children.mapNotNullTo(email) {
-                    it.child("Email").value
-                }
-            }
-        })
-        databaseReference.child("Transactions").addValueEventListener(object :
-            ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-            override fun onDataChange(p0: DataSnapshot) {
-                p0.children.mapNotNullTo(costs) {
-                    it.child("value").value
-                }
-                p0.children.mapNotNullTo(costname) {
-                    it.child("name").value
-                }
-                p0.children.mapNotNullTo(pdf) {
-                    it.child("pdf").value
-                }
-
-                // Calculation of total cost
-                count = menu.indexOfFirst { true }
-                last  = menu.indexOfLast { true }
-                while (count <= last){
-                    costnamefirst = costname.indexOfFirst { true }
-                    costnamelast = costname.indexOfLast { true }
-                    while ( costnamefirst <= costnamelast ){
-                        if (costname.get(costnamefirst) == menu.get(count))
-                        {
-                            cost += Integer.parseInt(costs.get(costnamefirst).toString())
-                        }
-                        costnamefirst += 1
-                    }
-                    finalcost.add(count,cost)
-                    cost = 0
-                    count += 1
-                }
-            }
-        })
-
 
         //Creating Cards In view
         Handler().postDelayed({
@@ -181,7 +118,7 @@ class UsersFragment : Fragment() {
         card_view.setContentPadding(25, 25, 25, 25)
 
         // Set the card view background color
-        card_view.setCardBackgroundColor(Color.LTGRAY)
+        card_view.setCardBackgroundColor(Color.rgb(98,0,238))
 
         // Set card view elevation
         card_view.cardElevation = 20F
@@ -195,8 +132,7 @@ class UsersFragment : Fragment() {
             startActivity(Intent(view!!.context,ExpandCard::class.java))
         }
 
-        // Add an ImageView to the CardView
-        card_view.addView(generateImageView())
+        // Add an TextView to the CardView
         card_view.addView(generatename())
         card_view.addView(generateemail())
         card_view.addView(generateprice())
@@ -205,40 +141,34 @@ class UsersFragment : Fragment() {
         root2.addView(card_view)
     }
 
-    // Custom method to generate an image view
-    private fun generateImageView(): ImageView {
-        val imageView = ImageView(view?.context)
-        val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, 250)
-        imageView.layoutParams = params
-        imageView.setImageResource(R.drawable.ic_launcher_background)
-        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-        return imageView
-    }
     //Custom method to generate an text view
     private fun generatename(): TextView {
         val textView = TextView(view?.context)
         val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT )
-        params.leftMargin = 300
+        params.leftMargin = 20
         textView.layoutParams = params
-        textView.text = names
+        textView.setTextColor(Color.WHITE)
+        textView.text = "Name : " + names
         textView.textSize = 22F
         return textView
     }
     private fun generateemail(): TextView {
         val textView = TextView(view?.context)
         val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT )
-        params.setMargins(300,100,0,0)
+        params.setMargins(20,100,0,0)
         textView.layoutParams = params
-        textView.text =  emails
-        textView.textSize = 16F
+        textView.setTextColor(Color.WHITE)
+        textView.text = "Email : " + emails
+        textView.textSize = 18F
         return textView
     }
     private fun generateprice(): TextView {
         val textView = TextView(view?.context)
         val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT )
-        params.setMargins(300,200,0,0)
+        params.setMargins(20,200,0,0)
         textView.layoutParams = params
-        textView.text = "Revenue: " + revenue
+        textView.setTextColor(Color.WHITE)
+        textView.text = "Revenue : " + revenue + " Rs."
         textView.textSize = 20F
         return textView
     }
