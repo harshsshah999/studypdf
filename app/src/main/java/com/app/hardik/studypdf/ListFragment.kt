@@ -1,5 +1,7 @@
 package com.app.hardik.studypdf
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -67,14 +69,14 @@ class ListFragment : Fragment() {
         StreamList = ArrayList<RecyclerViewItem>() as MutableList<Item>
         var item = Item(0)
         item.setText("All Available Categories")
-        item.setSecondText("")
+        item.setSecondText("Swipe Down to Refresh List")
         if(Apple.updateClicked == 1){
             item.setText("New +")
-            item.setSecondText("If You are adding New ROOT element Or for custom add Click here")
+            item.setSecondText("If You are adding New List Or for custom add Click here")
         }
         else{
             item.setText("All Available Categories")
-            item.setSecondText("")
+            item.setSecondText("Swipe Down to Refresh List")
         }
         StreamList.add(item)
         db= FirebaseDatabase.getInstance()
@@ -101,6 +103,7 @@ class ListFragment : Fragment() {
                 Toast.makeText(view.context,"Disable DELETE Mode First",Toast.LENGTH_LONG).show()
             }
             reload()
+
         }
         view.delete.setOnClickListener{
             if(t==0){
@@ -124,7 +127,6 @@ class ListFragment : Fragment() {
                         reload()
                       pullToRefresh.isRefreshing = false
         }
-
         return view
 
     }
@@ -181,6 +183,8 @@ class ListFragment : Fragment() {
         ft.detach(this).attach(this).commit()
     }
 
+
+
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -200,6 +204,7 @@ class ListFragment : Fragment() {
                 }
             }
     }
+
 }
 
 /* Value Event

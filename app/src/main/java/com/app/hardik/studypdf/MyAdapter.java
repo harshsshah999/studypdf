@@ -181,6 +181,7 @@ public class MyAdapter extends MultiLevelAdapter {
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+
                     if (mListItems.get(getAdapterPosition()).getText().equals("New +")|| mListItems.get(getAdapterPosition()).getText().equals("All Available Categories")){
                         return false;
                     }
@@ -191,6 +192,7 @@ public class MyAdapter extends MultiLevelAdapter {
                     Integer parent2,parent1,parent0 = 0;
                     final ListFragment listFragment = new ListFragment();
                     if (level == 3) {
+
                         parent2 = parentgive(level, 1);
                         parent2Name = mListItems.get(getAdapterPosition() - parent2).text;
                         parent1 = parentgive(2, parent2);
@@ -242,6 +244,10 @@ public class MyAdapter extends MultiLevelAdapter {
 
                     }
                     else if (Apple.INSTANCE.getUpdateClicked() == 1){
+                        if(mListItems.get(getAdapterPosition()).getLevel() == 3){
+                            Toast.makeText(mContext,"You Can't Add here!",Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
 
                         final String finalPath2 = path+"/";
                         alert.setTitle("Adding new element...");
