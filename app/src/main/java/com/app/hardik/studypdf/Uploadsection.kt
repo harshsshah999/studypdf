@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -29,7 +30,6 @@ lateinit var databaseReference: DatabaseReference
 val PICK_PDF_CODE = 2342
 lateinit var textViewStatus: TextView
 lateinit var progressBar: ProgressBar
-lateinit var filename: String
 lateinit var editTextFilename: EditText
 lateinit var filetitle: String
 lateinit var path: String
@@ -49,7 +49,7 @@ lateinit var path: String
         path = intent.getStringExtra("path")+"/"
         editTextFilename.setText(filetitle)
         firebaseDatabase = FirebaseDatabase.getInstance()
-        databaseReference = firebaseDatabase.getReference(path)
+        databaseReference = firebaseDatabase.getReference("Uploads/"+path)
         firebaseStorage = FirebaseStorage.getInstance().getReference()
 
     }
@@ -69,11 +69,12 @@ lateinit var path: String
             )
             != PackageManager.PERMISSION_GRANTED
         ) {
-            val intent = Intent(
+            /*val intent = Intent(
                 Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                 Uri.parse("package:$packageName")
             )
-            startActivity(intent)
+            startActivity(intent)*/
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1);
             return
         }
 

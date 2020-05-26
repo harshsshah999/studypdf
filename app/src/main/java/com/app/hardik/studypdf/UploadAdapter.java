@@ -117,6 +117,9 @@ public class UploadAdapter extends MultiLevelAdapter {
                     if (activate.INSTANCE.isClickable() == 0){
                         return;
                     }
+
+
+
                     //set click event on item here
                     //Toast.makeText(mContext, String.format(Locale.ENGLISH, "Item at position %d was clicked!", getAdapterPosition()), Toast.LENGTH_SHORT).show();
                 }
@@ -208,6 +211,9 @@ public class UploadAdapter extends MultiLevelAdapter {
                                 mListItems.get(0).setSecondText("Long Click Here to Cancel and select other subject");
                                 Toast.makeText(v.getRootView().getContext(), currentName+" is Selected. Click Upload button to Upload!", Toast.LENGTH_LONG).show();
                                 v.getRootView().findViewById(R.id.refresh).callOnClick();
+                               /* FirebaseDatabase db = FirebaseDatabase.getInstance();
+                                DatabaseReference ref = db.getReference("SubjectPath");
+                                ref.child(mListItems.get(getAdapterPosition()).getText()).setValue(activate.INSTANCE.getCurrentpath()); */
                             }
                         });
                         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

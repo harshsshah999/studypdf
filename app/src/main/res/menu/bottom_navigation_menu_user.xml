@@ -3,18 +3,18 @@
 
     <item
         android:id="@+id/navigation_userhome"
-        android:icon="@drawable/ic_appintro_arrow_back_white"
+        android:icon="@drawable/ic_home"
         android:title="Home" />
     <item
         android:id="@+id/navigation_search"
-        android:icon="@drawable/ic_appintro_done_white"
+        android:icon="@drawable/ic_search"
         android:title="Search" />
-  /*  <item
+    <item
         android:id="@+id/navigation_mypdf"
-        android:icon="@drawable/ic_appintro_arrow_forward_white"
+        android:icon="@drawable/uploadpdf"
         android:title="MyPDF" />
     <item
         android:id="@+id/navigation_profile"
-        android:icon="@drawable/ic_appintro_navigate_before_white"
-        android:title="Profile" /> */
+        android:icon="@drawable/ic_user"
+        android:title="Profile" />
 </menu>
