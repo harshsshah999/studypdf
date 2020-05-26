@@ -82,7 +82,21 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home,container,false)
-
+        if (menu.isEmpty()){
+            Log.i("Empty","True")
+        }
+        else{
+            menu.clear()
+            email.clear()
+            costs.clear()
+            finalcost.clear()
+            costname.clear()
+            pdf.clear()
+            date.clear()
+            position = 0
+            Total_revenue = 0
+            Log.i("Empty","False")
+        }
         //Fetching Details from database to mutable lists
         var Done :Boolean = false           //Used to know if fetching from dg is over or not
         database = FirebaseDatabase.getInstance()

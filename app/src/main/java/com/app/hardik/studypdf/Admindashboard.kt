@@ -20,9 +20,14 @@ lateinit var bottomNavigation: BottomNavigationView
         setContentView(R.layout.activity_admindashboard)
         bottomNavigation = findViewById(R.id.bottom_navigation)
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener)
+        bottomNavigation.checkItem(R.id.navigation_home)
         openFragment(HomeFragment.newInstance("", ""));
 
     }
+    internal fun BottomNavigationView.checkItem(actionId: Int) {
+        menu.findItem(actionId)?.isChecked = true
+    }
+
     fun openFragment(fragment: Fragment) {
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container, fragment)
