@@ -250,6 +250,7 @@ public class MyAdapter extends MultiLevelAdapter {
                         }
 
                         final String finalPath2 = path+"/";
+                       final String title = path+"-";
                         alert.setTitle("Adding new element...");
                         alert.setMessage("New element will be added under selected element!");
                         final EditText input = new EditText(v.getRootView().getContext());
@@ -283,7 +284,8 @@ public class MyAdapter extends MultiLevelAdapter {
                                 db = FirebaseDatabase.getInstance();
                                 dbrefer = db.getReference();
                                 String adder = input.getText().toString().trim();
-                                Log.i("finall 3",finalPath2 + " "+adder.trim());
+                                String subname = adder.substring(adder.lastIndexOf("/") + 1);
+                                Log.i("subname",subname);
                                 if(adder.equals(finalPath2)){
                                     Toast.makeText(mContext, "Error: Field can't be blank", Toast.LENGTH_SHORT).show();
                                     Log.i("exitt","eee");
@@ -292,7 +294,7 @@ public class MyAdapter extends MultiLevelAdapter {
                                 }
                                 Log.i("finall add",adder);
                                 dbrefer.child(adder).setValue(adder);
-                                dbrefer.child("SubjectPath").child(currentName).setValue(adder);
+                                dbrefer.child("SubjectPath").child(subname).setValue(adder);
                                 Toast.makeText(mContext,"New Element added successfully,Swipe Down to Refresh",Toast.LENGTH_LONG).show();
 //                                listFragment.reload();
                             }
