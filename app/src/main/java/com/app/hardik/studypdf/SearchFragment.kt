@@ -1,7 +1,5 @@
 package com.app.hardik.studypdf
 
-import android.app.DownloadManager
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
@@ -14,10 +12,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.core.view.marginTop
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_search.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -86,7 +81,7 @@ class SearchFragment : Fragment() {
             }
         })
         searchView = view.findViewById(R.id.SearchView)
-        searchimg = view.findViewById(R.id.imageView4)
+        searchimg = view.findViewById(R.id.Searchimage)
         searchscroll = view.findViewById(R.id.scrollViewSEARCH)
         searchtext = view.findViewById(R.id.textsearch)
         searchlist = view.findViewById(R.id.SEARCH_LIST)
