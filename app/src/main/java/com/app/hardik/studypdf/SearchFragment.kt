@@ -86,7 +86,7 @@ class SearchFragment : Fragment() {
             }
         })
         searchView = view.findViewById(R.id.SearchView)
-        searchimg = view.findViewById(R.id.Searchimage)
+        searchimg = view.findViewById(R.id.imageView4)
         searchscroll = view.findViewById(R.id.scrollViewSEARCH)
         searchtext = view.findViewById(R.id.textsearch)
         searchlist = view.findViewById(R.id.SEARCH_LIST)
