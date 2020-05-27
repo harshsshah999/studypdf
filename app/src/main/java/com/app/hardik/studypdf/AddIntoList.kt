@@ -14,6 +14,7 @@ class AddIntoList : AppCompatActivity() {
     lateinit var Streamval: String
     lateinit var Semesterval: String
     lateinit var Subjectval: String
+    lateinit var finalpath: String
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
@@ -40,12 +41,14 @@ class AddIntoList : AppCompatActivity() {
             Streamval = Stream.text.toString().trim()
             Semesterval = Semester.text.toString().trim()
             Subjectval = Subject.text.toString().trim()
+            finalpath = "StreamList/"+Streamval+"/"+Departmentval+"/"+Semesterval+"/"+Subjectval
             if(Departmentval.isNullOrEmpty() || Streamval.isNullOrEmpty() || Semesterval.isNullOrEmpty() || Subjectval.isNullOrEmpty() ){
                 Toast.makeText(this,"You Can't Leave a Field Empty!",Toast.LENGTH_SHORT).show()
             }
             else {
             databaseRef.child("StreamList").child(Streamval).child(Departmentval)
                 .child(Semesterval).child(Subjectval).setValue(Subjectval)
+                databaseRef.child("SubjectPath").child(Subjectval).setValue(finalpath)
             Toast.makeText(this,"Added Successfully",Toast.LENGTH_LONG).show()
                 }
 

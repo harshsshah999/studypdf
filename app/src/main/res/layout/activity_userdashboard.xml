@@ -24,6 +24,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/container"
+        android:layout_above="@+id/bottom_navigation"
+
+
         >
     </FrameLayout>
         <!-- Main content -->
@@ -33,9 +36,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_alignParentBottom="true"
-            android:background="@color/colorPrimaryDark"
-            app:itemIconTint="@color/white"
-            app:itemTextColor="@color/white"
+            android:background="#F7F8F8"
+            app:itemIconTint="@color/black"
+            app:itemTextColor="@color/black"
             app:menu="@menu/bottom_navigation_menu_user"
             />
 

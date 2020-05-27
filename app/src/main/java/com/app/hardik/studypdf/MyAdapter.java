@@ -187,7 +187,7 @@ public class MyAdapter extends MultiLevelAdapter {
                     }
                     AlertDialog.Builder alert = new AlertDialog.Builder(v.getRootView().getContext());
                     int level = mListItems.get(getAdapterPosition()).getLevel();
-                    String currentName = mListItems.get(getAdapterPosition()).text;
+                    final String currentName = mListItems.get(getAdapterPosition()).text;
                     String path = "",parent2Name,parent1Name,parent0Name = "";
                     Integer parent2,parent1,parent0 = 0;
                     final ListFragment listFragment = new ListFragment();
@@ -292,6 +292,7 @@ public class MyAdapter extends MultiLevelAdapter {
                                 }
                                 Log.i("finall add",adder);
                                 dbrefer.child(adder).setValue(adder);
+                                dbrefer.child("SubjectPath").child(currentName).setValue(adder);
                                 Toast.makeText(mContext,"New Element added successfully,Swipe Down to Refresh",Toast.LENGTH_LONG).show();
 //                                listFragment.reload();
                             }
