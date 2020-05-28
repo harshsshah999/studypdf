@@ -54,7 +54,6 @@
         android:id="@+id/textsearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="204dp"
         android:text="@android:string/search_go"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="#6200EE"
@@ -62,17 +61,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Searchimage"
+        app:layout_constraintVertical_bias="0.132" />
 
     <ImageView
         android:id="@+id/Searchimage"
         android:layout_width="116dp"
         android:layout_height="116dp"
+        android:contentDescription="@string/todo"
         android:src="@drawable/search1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/todo" />
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

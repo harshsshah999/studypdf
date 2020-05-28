@@ -1,7 +1,6 @@
 package com.app.hardik.studypdf
 
 import android.app.ActionBar
-import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -10,19 +9,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_users.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
-import kotlin.collections.ArrayList
+
 
 var menu = mutableListOf<Any>()         //List of usernames from Users
 var email = mutableListOf<Any>()        //List of emails from Users
@@ -57,7 +55,14 @@ class HomeFragment : Fragment() {
     var costnamefirst: Int = 0
     var costnamelast: Int = 0
     var cost: Int = 0
-
+    var arrayList: ArrayList<ItemModel>? = null
+    var recyclerView: RecyclerView? = null
+    var icons = intArrayOf(
+        R.drawable.ic_users,
+        R.drawable.download,
+        R.drawable.cost
+    )
+    var iconsName = ArrayList<String>()
     lateinit var names: String
     lateinit var pdfs: String
     lateinit var revenue: String
@@ -82,6 +87,21 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home,container,false)
+
+        recyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
+        arrayList = ArrayList()
+
+        recyclerView!!.layoutManager = LinearLayoutManager(
+            view.context,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+        recyclerView!!.itemAnimator = DefaultItemAnimator()
+
+
+
+
+
         if (menu.isEmpty()){
             Log.i("Empty","True")
         }
@@ -116,6 +136,7 @@ class HomeFragment : Fragment() {
                 }
                 if(p0.exists()){
                     userno.text = p0.childrenCount.toString()
+                    iconsName.add(p0.childrenCount.toString())
                 }
                 else {
                     userno.text = "NA"
@@ -142,6 +163,8 @@ class HomeFragment : Fragment() {
                 }
                 if(p0.exists()){
                     downloadno.text = p0.childrenCount.toString()
+                    iconsName.add(p0.childrenCount.toString())
+
                 }
                 else {
                     downloadno.text = "NA"
@@ -165,7 +188,8 @@ class HomeFragment : Fragment() {
                     cost = 0
                     count += 1
                 }
-                revenueno.text = Total_revenue.toString() + " ₹"
+                revenueno.text ="₹ "+Total_revenue.toString()
+                iconsName.add("₹ "+Total_revenue.toString())
 
 
                 //Sorting lists associated with transactions according to dates
@@ -237,6 +261,30 @@ class HomeFragment : Fragment() {
                 }
             }
         }, 0)
+
+Log.i("cardlist",iconsName.toString())
+        for (i in 0..2) {
+            val itemModel = ItemModel()
+            if (iconsName.isNullOrEmpty()){
+                iconsName.add("10")
+                iconsName.add("20")
+                iconsName.add("30")
+                itemModel.setImage(icons[i])
+                itemModel.setName(iconsName.get(i))
+            }
+          /*  itemModel.setImage(icons[i])
+            itemModel.setName(iconsName.get(i))
+            //add in array list
+            arrayList!!.add(itemModel) */
+            arrayList!!.add(itemModel)
+        }
+
+        val adapter = CustomAdapter(
+            view.context,
+            arrayList
+        )
+        recyclerView!!.adapter = adapter
+
         // Inflate the layout for this fragment
         return view
     }

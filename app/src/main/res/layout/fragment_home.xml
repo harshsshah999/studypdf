@@ -13,6 +13,20 @@
         android:layout_height="wrap_content"
         tools:context=".HomeFragment">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </RelativeLayout>
         <TextView
             android:id="@+id/revenueno"
             android:layout_width="104dp"
@@ -44,6 +58,23 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/userno"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/userno"
+            android:layout_width="104dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:gravity="center"
+            android:text="00"
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/downloadno"
+            app:layout_constraintEnd_toStartOf="@+id/downloadno"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/downloadno" />
 
         <TextView
             android:id="@+id/textView7"
@@ -93,22 +124,6 @@
                 android:orientation="vertical" />
         </ScrollView>
 
-        <TextView
-            android:id="@+id/userno"
-            android:layout_width="104dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:gravity="center"
-            android:text="00"
-            android:textAlignment="center"
-            android:textColor="@color/colorAccent"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/downloadno"
-            app:layout_constraintEnd_toStartOf="@+id/downloadno"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/downloadno" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

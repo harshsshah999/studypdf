@@ -33,7 +33,7 @@ class Paymentpage : AppCompatActivity(), PaymentResultListener {
         pdfname = intent.getStringExtra("pdfname")
         price = intent.getStringExtra("price")
         subname.text = pdfname
-        amount.text = price
+        amount.text = "₹"+price
 
         pay.setOnClickListener {
             if(fname.text.isNullOrBlank() || emailadd.text.isNullOrBlank() || phoneno.text.isNullOrBlank()){
