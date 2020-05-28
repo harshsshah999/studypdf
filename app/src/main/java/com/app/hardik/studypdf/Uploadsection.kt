@@ -13,6 +13,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.gms.tasks.Continuation
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -21,18 +22,18 @@ import com.google.firebase.storage.StorageReference
 
 
 class Uploadsection : AppCompatActivity() {
-lateinit var choose : Button
-lateinit var upload : Button
-lateinit var firebaseDatabase: FirebaseDatabase
-lateinit var firebaseAuth: FirebaseAuth
-lateinit var firebaseStorage: StorageReference
-lateinit var databaseReference: DatabaseReference
-val PICK_PDF_CODE = 2342
-lateinit var textViewStatus: TextView
-lateinit var progressBar: ProgressBar
-lateinit var editTextFilename: EditText
-lateinit var filetitle: String
-lateinit var path: String
+    lateinit var choose: Button
+    lateinit var firebaseDatabase: FirebaseDatabase
+    lateinit var firebaseAuth: FirebaseAuth
+    lateinit var firebaseStorage: StorageReference
+    lateinit var databaseReference: DatabaseReference
+    val PICK_PDF_CODE = 2342
+    lateinit var textViewStatus: TextView
+    lateinit var progressBar: ProgressBar
+    lateinit var editTextFilename: EditText
+    lateinit var filetitle: String
+    lateinit var path: String
+    lateinit var upload: Button
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,29 +41,30 @@ lateinit var path: String
         setContentView(R.layout.activity_uploadsection)
 
         choose = findViewById(R.id.chooser)
-        upload = findViewById(R.id.upload)
 
         textViewStatus = findViewById(R.id.textViewStatus)
         progressBar = findViewById(R.id.progressbarupload)
+        upload = findViewById(R.id.upload)
         editTextFilename = findViewById(R.id.editTextFileName)
         filetitle = intent.getStringExtra("name")
-        path = intent.getStringExtra("path")+"/"
+        path = intent.getStringExtra("path") + "/"
         editTextFilename.setText(filetitle)
         firebaseDatabase = FirebaseDatabase.getInstance()
-        databaseReference = firebaseDatabase.getReference("Uploads/"+path)
+        databaseReference = firebaseDatabase.getReference("Uploads/" + path)
         firebaseStorage = FirebaseStorage.getInstance().getReference()
-
+        upload.isEnabled = false
     }
 
 
-    fun choosefile (v: View){
+    fun choosefile(v: View) {
         getPDF()
     }
-    fun uploadfiles (v:View){
 
+    fun uploadfiles(v: View) {
 
     }
-    private fun getPDF (){
+
+    private fun getPDF() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.READ_EXTERNAL_STORAGE
@@ -74,7 +76,11 @@ lateinit var path: String
                 Uri.parse("package:$packageName")
             )
             startActivity(intent)*/
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1);
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                1
+            );
             return
         }
 
@@ -85,6 +91,7 @@ lateinit var path: String
         startActivityForResult(Intent.createChooser(intent, "Select PDF"), PICK_PDF_CODE)
 
     }
+
     override fun onActivityResult(
         requestCode: Int,
         resultCode: Int,
@@ -96,38 +103,83 @@ lateinit var path: String
             //if a file is selected
             if (data.data != null) {
                 //uploading the file
-                uploadFile(data.data)
+                upload.isEnabled = true
+                Toast.makeText(this,"Type Appropriate Name for your File!",Toast.LENGTH_SHORT).show()
+                upload.setOnClickListener{
+                    uploadFile2(data.data)
+                }
+
             } else {
                 Toast.makeText(this, "No file chosen", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-        private fun uploadFile(data:Uri){
-            progressBar.visibility = View.VISIBLE
-            val sRef: StorageReference =
-                firebaseStorage.child(path + System.currentTimeMillis() + ".pdf")
-            sRef.putFile(data)
-                .addOnSuccessListener { taskSnapshot ->
-                    progressBar.visibility = View.GONE
-                    textViewStatus.text = "File Uploaded Successfully"
-                    val upload = Upload(
-                        editTextFilename.getText().toString(),
-                        taskSnapshot.storage.getDownloadUrl().toString()
-                    )
-                    databaseReference.child(databaseReference.push().getKey()!!).setValue(upload)
+    /* private fun uploadFile(data: Uri) {
+        progressBar.visibility = View.VISIBLE
+        val filename = editTextFilename.getText().toString()
+        val sRef: StorageReference =
+            firebaseStorage.child(path + filename + ".pdf")
+        val uploadTask = sRef.putFile(data)
+            uploadTask.addOnSuccessListener { taskSnapshot ->
+                progressBar.visibility = View.GONE
+                textViewStatus.text = "File Uploaded Successfully"
+                 val upload = Upload(
+                     filename,
+                     taskSnapshot.storage.getDownloadUrl().result.toString()
+                 )
+                 databaseReference.child(databaseReference.push().getKey()!!).setValue(upload)
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(
+                    applicationContext,
+                    exception.message,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            .addOnProgressListener { taskSnapshot ->
+                val progress =
+                    (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount).toInt()
+                textViewStatus.setText("$progress % Uploading...");
+            }
+
+    } */
+
+    private fun uploadFile2 (data: Uri){
+        progressBar.visibility = View.VISIBLE
+        val filename = editTextFilename.getText().toString()
+        val sRef: StorageReference =
+            firebaseStorage.child(path + filename + ".pdf")
+        var uploadTask = sRef.putFile(data)
+        uploadTask
+            .continueWithTask{task ->
+            if(!task.isSuccessful){
+                task.exception?.let {
+                    throw it
                 }
-                .addOnFailureListener { exception ->
-                    Toast.makeText(
-                        applicationContext,
-                        exception.message,
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                .addOnProgressListener { taskSnapshot ->
-                    val progress =
-                        (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount).toInt()
-                    textViewStatus.setText("$progress % Uploading...");
-                }
+            }
+            sRef.downloadUrl
         }
+            .addOnCompleteListener{task ->
+            if(task.isSuccessful){
+                val downloadUri = task.result
+                val upload = Upload(
+                    filename,
+                    downloadUri.toString()
+                )
+                textViewStatus.text = "File Uploaded Successfully"
+                progressBar.visibility = View.GONE
+                databaseReference.child(databaseReference.push().getKey()!!).setValue(upload)
+            }
+            else{
+                Toast.makeText(this,"Error",Toast.LENGTH_SHORT).show()
+            }
+        }
+        uploadTask.addOnProgressListener { taskSnapshot ->
+            val progress = ((100.0 * taskSnapshot.bytesTransferred) / taskSnapshot.totalByteCount).toInt()
+            textViewStatus.setText("$progress % Uploading...")
+        }
+    }
 }
+
+
