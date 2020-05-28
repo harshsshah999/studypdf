@@ -108,7 +108,6 @@ class Uploadsection : AppCompatActivity() {
                 upload.setOnClickListener{
                     uploadFile2(data.data)
                 }
-
             } else {
                 Toast.makeText(this, "No file chosen", Toast.LENGTH_SHORT).show()
             }
@@ -149,7 +148,7 @@ class Uploadsection : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         val filename = editTextFilename.getText().toString()
         val sRef: StorageReference =
-            firebaseStorage.child(path + filename + ".pdf")
+            firebaseStorage.child(path + System.currentTimeMillis() + ".pdf")
         var uploadTask = sRef.putFile(data)
         uploadTask
             .continueWithTask{task ->
