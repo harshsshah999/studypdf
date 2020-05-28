@@ -118,7 +118,7 @@ class UsersFragment : Fragment() {
         card_view.setContentPadding(25, 25, 25, 25)
 
         // Set the card view background color
-        card_view.setCardBackgroundColor(Color.rgb(98,0,238))
+        card_view.setCardBackgroundColor(Color.rgb(255,27,118))
 
         // Set card view elevation
         card_view.cardElevation = 20F
