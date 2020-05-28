@@ -102,6 +102,10 @@ class SearchFragment : Fragment() {
             searchimg.startAnimation(anim_translate_top)
             searchtext.startAnimation(anim_fade_out)
         }
+        searchtext.setOnClickListener{
+            searchimg.startAnimation(anim_translate_top)
+            searchtext.startAnimation(anim_fade_out)
+        }
         anim_translate_top.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
             }

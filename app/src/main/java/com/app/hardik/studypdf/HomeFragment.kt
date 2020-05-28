@@ -286,7 +286,7 @@ class HomeFragment : Fragment() {
         card_view.setContentPadding(25, 25, 25, 25)
 
         // Set the card view background color
-        card_view.setCardBackgroundColor(Color.rgb(254,137,1))
+        card_view.setCardBackgroundColor(Color.rgb(255,193,7))
 
         // Set card view elevation
         card_view.cardElevation = 20F
@@ -342,7 +342,7 @@ class HomeFragment : Fragment() {
         card_view.setContentPadding(25, 25, 25, 25)
 
         // Set the card view background color
-        card_view.setCardBackgroundColor(Color.rgb(98,0,238))
+        card_view.setCardBackgroundColor(Color.rgb(109,255,12))
 
         // Set card view elevation
         card_view.cardElevation = 20F

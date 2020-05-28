@@ -2,6 +2,8 @@ package com.app.hardik.studypdf
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -48,6 +50,7 @@ lateinit var bottomNavigation: BottomNavigationView
                    }
                    R.id.navigation_home -> {
                        openFragment(HomeFragment.newInstance("", ""))
+
                        return true
                    }
                    R.id.navigation_list -> {
