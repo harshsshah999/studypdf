@@ -34,6 +34,8 @@ class Uploadsection : AppCompatActivity() {
     lateinit var filetitle: String
     lateinit var path: String
     lateinit var upload: Button
+    lateinit var price: EditText
+    lateinit var priceval: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +46,7 @@ class Uploadsection : AppCompatActivity() {
 
         textViewStatus = findViewById(R.id.textViewStatus)
         progressBar = findViewById(R.id.progressbarupload)
+        price = findViewById(R.id.price)
         upload = findViewById(R.id.upload)
         editTextFilename = findViewById(R.id.editTextFileName)
         filetitle = intent.getStringExtra("name")
@@ -106,7 +109,13 @@ class Uploadsection : AppCompatActivity() {
                 upload.isEnabled = true
                 Toast.makeText(this,"Type Appropriate Name for your File!",Toast.LENGTH_SHORT).show()
                 upload.setOnClickListener{
+                    if(editTextFilename.text.isNullOrBlank() || price.text.isNullOrBlank()){
+                        Toast.makeText(this,"You can't leave fields empty!",Toast.LENGTH_SHORT).show()
+                    }
+                    else{
+                        priceval = price.text.toString().trim()
                     uploadFile2(data.data)
+                    }
                 }
             } else {
                 Toast.makeText(this, "No file chosen", Toast.LENGTH_SHORT).show()
@@ -164,7 +173,7 @@ class Uploadsection : AppCompatActivity() {
                 val downloadUri = task.result
                 val upload = Upload(
                     filename,
-                    downloadUri.toString()
+                    downloadUri.toString(),priceval
                 )
                 textViewStatus.text = "File Uploaded Successfully"
                 progressBar.visibility = View.GONE

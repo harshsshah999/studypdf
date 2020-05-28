@@ -1,7 +1,9 @@
 package com.app.hardik.studypdf
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -78,6 +80,27 @@ class UserHomeFragment : Fragment() {
         readlist()
         myAdapter = UserAdapter(view.context, StreamList, multiLevelRecyclerView)
         multiLevelRecyclerView.adapter = myAdapter
+
+        multiLevelRecyclerView.setOnItemClick { view, item, position ->
+            if(StreamList.get(position).level == 3){
+                val name = StreamList.get(position).text
+                dbrefer.child("SubjectPath").child(StreamList.get(position).text).addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onCancelled(p0: DatabaseError) {
+
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        val path = p0.value.toString()
+                        val intent = Intent(view.context,Pdflist::class.java)
+                        intent.putExtra("path",path)
+                        intent.putExtra("name",name)
+                        startActivity(intent)
+                    }
+
+                })
+            }
+
+        }
         val pullToRefresh: SwipeRefreshLayout = view.findViewById(R.id.pullToRefresh)
         pullToRefresh.setOnRefreshListener {
             reload()

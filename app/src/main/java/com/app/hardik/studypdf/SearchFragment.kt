@@ -144,7 +144,7 @@ class SearchFragment : Fragment() {
                                     android.R.layout.simple_list_item_1, tempsublist
                                 )
                                 if (tempsublist.isEmpty()){
-                                    tempsublist.add(0, " '" + name+ "' " + " Not Fount")
+                                    tempsublist.add(0, " '" + name+ "' " + " Not Found")
                                 }
                                 searchlist.adapter = myAdapter
                             }

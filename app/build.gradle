@@ -49,5 +49,7 @@ dependencies {
     implementation 'com.muditsen.multilevelrecyclerview:multilevelview:1.0.0'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
+    //razorpay
+    implementation 'com.razorpay:checkout:1.5.16'
 
 }
