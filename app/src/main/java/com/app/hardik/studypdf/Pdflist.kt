@@ -20,7 +20,7 @@ class Pdflist : AppCompatActivity() {
     lateinit var PdfList: MutableList<Item>
     lateinit var pdflistname: TextView
     var path : String = ""
-
+    val urlMap = hashMapOf<String,String>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pdflist)
@@ -51,6 +51,7 @@ class Pdflist : AppCompatActivity() {
                 var subprice = priceof.substringBefore(" ","error").trim()
                 //Log.i("subprice",subprice)
                 intent.putExtra("price",subprice)
+                intent.putExtra("url",urlMap.get(PdfList.get(position).text.toString()))
                 startActivity(intent)
             }
 
@@ -74,6 +75,7 @@ class Pdflist : AppCompatActivity() {
                 var item = Item(0)
                 item.setText(p0.child("name").value.toString())
                 item.setSecondText(p0.child("price").value.toString()+" \u20B9")
+                urlMap.put(p0.child("name").value.toString(),p0.child("url").value.toString())
                 PdfList.add(item)
                 myAdapter.notifyDataSetChanged()
             }

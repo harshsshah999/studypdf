@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Paymentpage"></activity>
+        <activity android:name=".Pdfviewer"></activity>
+        <activity android:name=".Paymentpage" />
         <activity android:name=".Pdflist" />
         <activity android:name=".Uploadsection" />
         <activity android:name=".ExpandCard" />

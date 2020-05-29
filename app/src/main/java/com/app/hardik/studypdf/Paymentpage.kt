@@ -20,6 +20,8 @@ class Paymentpage : AppCompatActivity(), PaymentResultListener {
     lateinit var pay : Button
     lateinit var pdfname : String
     lateinit var price: String
+    lateinit var url: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_paymentpage)
@@ -32,8 +34,9 @@ class Paymentpage : AppCompatActivity(), PaymentResultListener {
         pay = findViewById(R.id.pay)
         pdfname = intent.getStringExtra("pdfname")
         price = intent.getStringExtra("price")
+        url = intent.getStringExtra("url")
         subname.text = pdfname
-        amount.text = "₹"+price
+        amount.text = price
 
         pay.setOnClickListener {
             if(fname.text.isNullOrBlank() || emailadd.text.isNullOrBlank() || phoneno.text.isNullOrBlank()){
