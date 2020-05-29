@@ -35,6 +35,7 @@ class SearchFragment : Fragment() {
     lateinit var myAdapter: ArrayAdapter<String>
     var c: Int = 0
     lateinit var name: String
+    lateinit var Depflag: String
 
     var newsublist: MutableList<String> = ArrayList()
     var tempsublist: MutableList<String> = ArrayList()
@@ -198,7 +199,9 @@ class SearchFragment : Fragment() {
         newsublist.clear()
         for (value in subpath) {
             if (value.toUpperCase().contains(name.toUpperCase().toRegex())) {
-                newsublist.add(c,subkey[subpath.indexOf(value)])
+                Depflag = value.substring(value.indexOf("/") + 1, value.lastIndexOf("/") - 1)
+                Depflag = Depflag.substring(Depflag.indexOf("/") + 1, Depflag.lastIndexOf("/"))
+                newsublist.add(c,subkey[subpath.indexOf(value)] + "\n" + Depflag)
                 c += 1
             }
         }

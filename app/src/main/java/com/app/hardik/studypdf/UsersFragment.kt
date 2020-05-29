@@ -19,6 +19,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_users.*
 import kotlinx.android.synthetic.main.fragment_users.view.*
 
@@ -59,18 +60,39 @@ class UsersFragment : Fragment() {
         // Inflate the layout for this fragment
         val view: View = inflater!!.inflate(R.layout.fragment_users, container, false)
 
+        Handler().postDelayed({val textView = TextView(view.context)
+            val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT )
+            var width = root2.measuredWidth
+            var width2 = width*40/100
+            params.setMargins(width2,0,0,0)
+            textView.layoutParams = params
+            textView.setTextColor(Color.BLACK)
+            textView.text = "Users"
+            textView.textSize = 35F
+            root2.addView(textView)},500)
+
         //Creating Cards In view
-        Handler().postDelayed({
-            count = menu.indexOfFirst { true }
-            last  = menu.indexOfLast { true }
-            while (count <= last){
-                names = menu.get(count).toString()
-                emails = email.get(count).toString()
-                revenue = finalcost.get(count).toString()
-                new()
-                count = count + 1
+        val handler = Handler()
+        handler.postDelayed(object : Runnable {
+            override fun run() {
+                //Call your function here
+                if(isOnline(view.context)){
+                    count = menu.indexOfFirst { true }
+                    last  = menu.indexOfLast { true }
+                    while (count <= last){
+                        names = menu.get(count).toString()
+                        emails = email.get(count).toString()
+                        revenue = finalcost.get(count).toString()
+                        new()
+                        count = count + 1
+                    }
+                }
+                else {
+                    handler.postDelayed(this, 1000)//1 sec delay
+                }
             }
-        }, 1000)
+        }, 550)
+
         return view
     }
 
@@ -106,7 +128,10 @@ class UsersFragment : Fragment() {
         )
 
         // Set bottom margin for card view
-        layoutParams.bottomMargin = 50
+        layoutParams.bottomMargin = 10
+        layoutParams.topMargin = 15
+        layoutParams.leftMargin = 8
+        layoutParams.rightMargin = 8
 
         // Set the card view layout params
         card_view.layoutParams = layoutParams
@@ -136,39 +161,55 @@ class UsersFragment : Fragment() {
         card_view.addView(generatename())
         card_view.addView(generateemail())
         card_view.addView(generateprice())
-
+        card_view.addView(generateImageView())
         // Finally, add the CardView in root layout
         root2.addView(card_view)
+    }
+
+    // Custom method to generate an image view
+    private fun generateImageView(): ImageView {
+        val imageView = ImageView(view?.context)
+        val params = ActionBar.LayoutParams(55, 55)
+        var width = root2.measuredWidth
+        var width2 = width*20/100
+        params.setMargins(width-width2,80,0,0)
+        imageView.layoutParams = params
+        imageView.setImageResource(R.drawable.ic_appintro_arrow_forward_white)
+        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+        imageView.setBackgroundColor(Color.rgb(98,0,238))
+        return imageView
     }
 
     //Custom method to generate an text view
     private fun generatename(): TextView {
         val textView = TextView(view?.context)
         val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT )
-        params.leftMargin = 20
+        params.leftMargin = 10
         textView.layoutParams = params
         textView.setTextColor(Color.WHITE)
-        textView.text = "Name : " + names
+        textView.text = names
         textView.textSize = 22F
         return textView
     }
     private fun generateemail(): TextView {
         val textView = TextView(view?.context)
         val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT )
-        params.setMargins(20,100,0,0)
+        params.setMargins(10,80,0,0)
         textView.layoutParams = params
         textView.setTextColor(Color.WHITE)
-        textView.text = "Email : " + emails
+        textView.text = emails
         textView.textSize = 18F
         return textView
     }
     private fun generateprice(): TextView {
         val textView = TextView(view?.context)
         val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT )
-        params.setMargins(20,200,0,0)
+        var width = root2.measuredWidth
+        var width2 = width*29/100
+        params.setMargins(width-width2,0,0,0)
         textView.layoutParams = params
         textView.setTextColor(Color.WHITE)
-        textView.text = "Revenue : " + revenue + " Rs."
+        textView.text = "₹ " + revenue
         textView.textSize = 20F
         return textView
     }

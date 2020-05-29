@@ -1,26 +1,31 @@
 package com.app.hardik.studypdf
 
 import android.app.ActionBar
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
+import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.activity_admindashboard.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_users.*
+import kotlinx.android.synthetic.main.row_layout.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
+import java.util.*
+import kotlin.collections.ArrayList
 
 var menu = mutableListOf<Any>()         //List of usernames from Users
 var email = mutableListOf<Any>()        //List of emails from Users
@@ -55,20 +60,17 @@ class HomeFragment : Fragment() {
     var costnamefirst: Int = 0
     var costnamelast: Int = 0
     var cost: Int = 0
-    var arrayList: ArrayList<ItemModel>? = null
-    var recyclerView: RecyclerView? = null
-    var icons = intArrayOf(
-        R.drawable.ic_users,
-        R.drawable.download,
-        R.drawable.cost
-    )
-    var iconsName = ArrayList<String>()
+
     lateinit var names: String
     lateinit var pdfs: String
     lateinit var revenue: String
     lateinit var dates: String
 
     var sorteddates = listOf<Any>()
+
+    private lateinit var spinner: ProgressBar
+
+    lateinit var nav_menu: Menu
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -88,18 +90,9 @@ class HomeFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home,container,false)
 
-        recyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
-        arrayList = ArrayList()
-
-        recyclerView!!.layoutManager = LinearLayoutManager(
-            view.context,
-            LinearLayoutManager.HORIZONTAL,
-            false
-        )
-        recyclerView!!.itemAnimator = DefaultItemAnimator()
-
-
-
+        //spinner
+        spinner = view.findViewById(R.id.progressBar1)
+        spinner.visibility = View.VISIBLE
 
 
         if (menu.isEmpty()){
@@ -136,7 +129,6 @@ class HomeFragment : Fragment() {
                 }
                 if(p0.exists()){
                     userno.text = p0.childrenCount.toString()
-                    iconsName.add(p0.childrenCount.toString())
                 }
                 else {
                     userno.text = "NA"
@@ -163,8 +155,6 @@ class HomeFragment : Fragment() {
                 }
                 if(p0.exists()){
                     downloadno.text = p0.childrenCount.toString()
-                    iconsName.add(p0.childrenCount.toString())
-
                 }
                 else {
                     downloadno.text = "NA"
@@ -188,14 +178,13 @@ class HomeFragment : Fragment() {
                     cost = 0
                     count += 1
                 }
-                revenueno.text ="₹ "+Total_revenue.toString()
-                iconsName.add("₹ "+Total_revenue.toString())
+                revenueno.text = Total_revenue.toString() + " ₹"
 
 
                 //Sorting lists associated with transactions according to dates
                 val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
-                 sorteddates = date.sortedByDescending {
+                sorteddates = date.sortedByDescending {
                     LocalDate.parse(it as CharSequence?, dateTimeFormatter)
                 }
                 count = sorteddates.indexOfFirst { true }
@@ -230,60 +219,56 @@ class HomeFragment : Fragment() {
                     count += 1
                 }
 
-               Done = true
+                Done = true
             }
         })
-
-        //Creating cards
-        val handler = Handler()
-        handler.postDelayed(object : Runnable {
-            override fun run() {
-                //Call your function here
-                if (Done == true){
-                    Log.d("Menu after done", menu.toString())
-                    count = costname.indexOfFirst { true }
-                    last  = costname.indexOfLast { true }
-                    while (count <= last){
-                        if(count == 0 || date[count] != date[count-1]){
-                            dates = date.get(count).toString()
-                            newdatecard()           //Dates
+        //Check if user is online or not
+        if (isOnline(view.context)){
+            //Creating cards
+            val handler = Handler()
+            handler.postDelayed(object : Runnable {
+                override fun run() {
+                    //Call your function here
+                    if (Done == true){
+                        Log.d("Menu after done", menu.toString())
+                        count = costname.indexOfFirst { true }
+                        last  = costname.indexOfLast { true }
+                        while (count <= last){
+                            if(count == 0 || date[count] != date[count-1]){
+                                dates = date.get(count).toString()
+                                newdatecard()           //Dates
+                            }
+                            names = costname.get(count).toString()
+                            pdfs = pdf.get(count).toString()
+                            revenue = costs.get(count).toString()
+                            new()                       //User information
+                            count = count + 1
                         }
-                        names = costname.get(count).toString()
-                        pdfs = pdf.get(count).toString()
-                        revenue = costs.get(count).toString()
-                        new()                       //User information
-                        count = count + 1
+                        spinner.visibility = View.GONE
+                        nav_menu = bottomNavigation.menu
+                        nav_menu.findItem(R.id.navigation_settings).setVisible(true)
+                        nav_menu.findItem(R.id.navigation_upload).setVisible(true)
+                        nav_menu.findItem(R.id.navigation_home).setVisible(true)
+                        nav_menu.findItem(R.id.navigation_list).setVisible(true)
+                        nav_menu.findItem(R.id.navigation_users).setVisible(true)
                     }
-
+                    else {
+                        handler.postDelayed(this, 1000)//1 sec delay
+                    }
                 }
-                else {
-                    handler.postDelayed(this, 1000)//1 sec delay
-                }
-            }
-        }, 0)
+            }, 0)
 
-Log.i("cardlist",iconsName.toString())
-        for (i in 0..2) {
-            val itemModel = ItemModel()
-            if (iconsName.isNullOrEmpty()){
-                iconsName.add("10")
-                iconsName.add("20")
-                iconsName.add("30")
-                itemModel.setImage(icons[i])
-                itemModel.setName(iconsName.get(i))
-            }
-          /*  itemModel.setImage(icons[i])
-            itemModel.setName(iconsName.get(i))
-            //add in array list
-            arrayList!!.add(itemModel) */
-            arrayList!!.add(itemModel)
         }
-
-        val adapter = CustomAdapter(
-            view.context,
-            arrayList
-        )
-        recyclerView!!.adapter = adapter
+        else{
+            spinner.visibility = View.GONE
+            nav_menu = bottomNavigation.menu
+            nav_menu.findItem(R.id.navigation_settings).setVisible(true)
+            nav_menu.findItem(R.id.navigation_upload).setVisible(true)
+            nav_menu.findItem(R.id.navigation_home).setVisible(true)
+            nav_menu.findItem(R.id.navigation_list).setVisible(true)
+            nav_menu.findItem(R.id.navigation_users).setVisible(true)
+            Toast.makeText(view.context,"Check network connection !",Toast.LENGTH_LONG).show()
+        }
 
         // Inflate the layout for this fragment
         return view
@@ -311,7 +296,7 @@ Log.i("cardlist",iconsName.toString())
 
     fun newdatecard() {
         // Initialize a new CardView instance
-        val card_view = CardView(view!!.context)
+        val card_view2 = CardView(view!!.context)
 
         // Initialize a new LayoutParams instance, CardView width and height
         val layoutParams = ActionBar.LayoutParams(
@@ -325,31 +310,31 @@ Log.i("cardlist",iconsName.toString())
         layoutParams.leftMargin = 20
 
         // Set the card view layout params
-        card_view.layoutParams = layoutParams
+        card_view2.layoutParams = layoutParams
 
         // Set the card view corner radius
-        card_view.radius = 50F
+        card_view2.radius = 5F
 
         // Set the card view content padding
-        card_view.setContentPadding(25, 25, 25, 25)
+        card_view2.setContentPadding(25, 12, 25, 12)
 
         // Set the card view background color
-        card_view.setCardBackgroundColor(Color.rgb(255,193,7))
+        card_view2.setCardBackgroundColor(Color.rgb(254,137,1))
 
         // Set card view elevation
-        card_view.cardElevation = 20F
+        card_view2.cardElevation = 20F
 
         // Set card view maximum elevation
-        card_view.maxCardElevation = 12F
+        card_view2.maxCardElevation = 12F
 
         // Set a click listener for card view
-        card_view.setOnClickListener {
-           // position = card_view.id
+        card_view2.setOnClickListener {
+            // position = card_view.id
             // startActivity(Intent(view!!.context,ExpandCard::class.java))
         }
 
         // Add an TextView to the CardView
-        card_view.addView(generatedate())
+        card_view2.addView(generatedate())
 
         //Add horizontal line
         val line = View(view!!.context)
@@ -357,13 +342,12 @@ Log.i("cardlist",iconsName.toString())
             ActionBar.LayoutParams.MATCH_PARENT, // View width
             2 // View height
         )
-        layoutParamsline.bottomMargin = 20
         line.layoutParams = layoutParamsline
         line.setBackgroundColor(Color.GRAY)
         transactions.addView(line)
 
         // Finally, add the CardView in root layout
-        transactions.addView(card_view)
+        transactions.addView(card_view2)
     }
 
     fun new() {
@@ -379,6 +363,8 @@ Log.i("cardlist",iconsName.toString())
 
         // Set bottom margin for card view
         layoutParams.bottomMargin = 20
+        layoutParams.leftMargin = 8
+        layoutParams.rightMargin = 8
 
         // Set the card view layout params
         card_view.layoutParams = layoutParams
@@ -390,7 +376,7 @@ Log.i("cardlist",iconsName.toString())
         card_view.setContentPadding(25, 25, 25, 25)
 
         // Set the card view background color
-        card_view.setCardBackgroundColor(Color.rgb(255,27,118))
+        card_view.setCardBackgroundColor(Color.rgb(98,0,238))
 
         // Set card view elevation
         card_view.cardElevation = 20F
@@ -401,7 +387,7 @@ Log.i("cardlist",iconsName.toString())
         // Set a click listener for card view
         card_view.setOnClickListener {
             position = card_view.id
-           // startActivity(Intent(view!!.context,ExpandCard::class.java))
+            // startActivity(Intent(view!!.context,ExpandCard::class.java))
         }
 
         // Add an TextView to the CardView
@@ -420,7 +406,7 @@ Log.i("cardlist",iconsName.toString())
         params.leftMargin = 20
         textView.layoutParams = params
         textView.setTextColor(Color.WHITE)
-        textView.text = "Name : " + names
+        textView.text = names
         textView.textSize = 22F
         return textView
     }
@@ -430,17 +416,19 @@ Log.i("cardlist",iconsName.toString())
         params.setMargins(20,80,0,0)
         textView.layoutParams = params
         textView.setTextColor(Color.WHITE)
-        textView.text = "PDF : " + pdfs
-        textView.textSize = 18F
+        textView.text = pdfs
+        textView.textSize = 19F
         return textView
     }
     private fun generateprice(): TextView {
         val textView = TextView(view?.context)
         val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT )
-        params.setMargins(20,150,0,0)
+        var width = transactions.measuredWidth
+        var width2 = width*25/100
+        params.setMargins(width-width2,80,0,0)
         textView.layoutParams = params
         textView.setTextColor(Color.WHITE)
-        textView.text = "Cost : " + revenue
+        textView.text = "₹ " + revenue
         textView.textSize = 20F
         return textView
     }

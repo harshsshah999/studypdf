@@ -1,14 +1,18 @@
 package com.app.hardik.studypdf
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Layout
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 
 class Introscreen : AppCompatActivity() {
 
@@ -24,6 +28,7 @@ class Introscreen : AppCompatActivity() {
         val leftslidebtn = findViewById<Button>(R.id.rightslide)
         val rightslidebtn = findViewById<Button>(R.id.leftslide)
         val skip = findViewById<Button>(R.id.skip)
+        val Introlayout = findViewById<ConstraintLayout>(R.id.Introlayout)
         lateinit var animl : Animation
         lateinit var animr : Animation
 
@@ -90,7 +95,12 @@ class Introscreen : AppCompatActivity() {
             }
         }
         fun previousslide(){
-            if(seek.progress != seek.min){
+            if(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    seek.progress != seek.min
+                } else {
+                    TODO("VERSION.SDK_INT < O")
+                }
+            ){
                 seek.progress = seek.progress - 1
                 nextbtn.text = "Next"
                 rightanim()
@@ -136,5 +146,50 @@ class Introscreen : AppCompatActivity() {
         skip.setOnClickListener{
             gotologin()
         }
+
+        welcomeimg.setOnTouchListener(object : OnSwipeTouchListener(this@Introscreen) {
+            override fun onSwipeLeft() {
+                super.onSwipeLeft()
+                nextslide()
+            }
+
+            override fun onSwipeRight() {
+                super.onSwipeRight()
+                previousslide()
+            }
+        })
+        welcometxt.setOnTouchListener(object : OnSwipeTouchListener(this@Introscreen) {
+            override fun onSwipeLeft() {
+                super.onSwipeLeft()
+                nextslide()
+            }
+
+            override fun onSwipeRight() {
+                super.onSwipeRight()
+                previousslide()
+            }
+        })
+        leftslidebtn.setOnTouchListener(object : OnSwipeTouchListener(this@Introscreen) {
+            override fun onSwipeLeft() {
+                super.onSwipeLeft()
+                nextslide()
+            }
+
+            override fun onSwipeRight() {
+                super.onSwipeRight()
+                previousslide()
+            }
+        })
+        rightslidebtn.setOnTouchListener(object : OnSwipeTouchListener(this@Introscreen) {
+            override fun onSwipeLeft() {
+                super.onSwipeLeft()
+                nextslide()
+            }
+
+            override fun onSwipeRight() {
+                super.onSwipeRight()
+                previousslide()
+            }
+        })
     }
 }

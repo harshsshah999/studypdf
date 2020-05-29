@@ -6,16 +6,18 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-
+lateinit var bottomNavigation: BottomNavigationView
 
 class Admindashboard : AppCompatActivity() {
-lateinit var bottomNavigation: BottomNavigationView
+
+    lateinit var nav_menu: Menu
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -23,6 +25,12 @@ lateinit var bottomNavigation: BottomNavigationView
         bottomNavigation = findViewById(R.id.bottom_navigation)
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener)
         bottomNavigation.checkItem(R.id.navigation_home)
+        nav_menu = bottomNavigation.menu
+        nav_menu.findItem(R.id.navigation_settings).setVisible(false)
+        nav_menu.findItem(R.id.navigation_upload).setVisible(false)
+        nav_menu.findItem(R.id.navigation_home).setVisible(false)
+        nav_menu.findItem(R.id.navigation_list).setVisible(false)
+        nav_menu.findItem(R.id.navigation_users).setVisible(false)
         openFragment(HomeFragment.newInstance("", ""));
 
     }
@@ -65,7 +73,4 @@ lateinit var bottomNavigation: BottomNavigationView
                return false
            }
        }
-
-
-
 }
