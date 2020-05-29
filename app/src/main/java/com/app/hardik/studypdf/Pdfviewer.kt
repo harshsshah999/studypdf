@@ -1,18 +1,43 @@
 package com.app.hardik.studypdf
 
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
+import android.view.View
+import android.view.WindowManager
+import android.widget.ProgressBar
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.FragmentActivity
 import com.github.barteksc.pdfviewer.PDFView
-import kotlinx.android.synthetic.main.activity_pdfviewer.*
+import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
+import java.io.*
+import java.net.URL
+import java.net.URLConnection
+
 
 class Pdfviewer : AppCompatActivity() {
+
+    lateinit var progressBar: ProgressBar
+    lateinit var pdfView: PDFView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
         setContentView(R.layout.activity_pdfviewer)
-        val pdfView = findViewById<PDFView>(R.id.pdfView)
-        pdfView.fromUri(Uri.parse("https://firebasestorage.googleapis.com/v0/b/studypdf-6de89.appspot.com/o/StreamList%2FEngineering%2FComputer%20Science%2FSEM%201%2FAC%2FAC.pdf?alt=media&token=853f0f49-0bcd-437a-bbec-ba28462e5b54"))
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        val path = intent.getStringExtra("path")
+        progressBar = findViewById(R.id.pdfprogressBar)
+        pdfView = findViewById<PDFView>(R.id.pdfView)
+        val yourFile = File(path)
+        Log.i("bingo",yourFile.toString())
+        pdfView.fromFile(yourFile)
             .load()
 
+
     }
+
 }

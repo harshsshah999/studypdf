@@ -24,7 +24,6 @@ import com.google.firebase.storage.StorageReference
 class Uploadsection : AppCompatActivity() {
     lateinit var choose: Button
     lateinit var firebaseDatabase: FirebaseDatabase
-    lateinit var firebaseAuth: FirebaseAuth
     lateinit var firebaseStorage: StorageReference
     lateinit var databaseReference: DatabaseReference
     val PICK_PDF_CODE = 2342
@@ -63,9 +62,7 @@ class Uploadsection : AppCompatActivity() {
         getPDF()
     }
 
-    fun uploadfiles(v: View) {
 
-    }
 
     private fun getPDF() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(
@@ -155,7 +152,7 @@ class Uploadsection : AppCompatActivity() {
 
     private fun uploadFile2 (data: Uri){
         progressBar.visibility = View.VISIBLE
-        val filename = editTextFilename.getText().toString()
+        val filename = editTextFilename.getText().toString().trim()
         val sRef: StorageReference =
             firebaseStorage.child(path + System.currentTimeMillis() + ".pdf")
         var uploadTask = sRef.putFile(data)

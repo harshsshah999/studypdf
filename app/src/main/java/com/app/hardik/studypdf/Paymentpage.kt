@@ -1,53 +1,88 @@
 package com.app.hardik.studypdf
 
 import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
+import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FileDownloadTask
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import com.razorpay.Checkout
 import com.razorpay.PaymentResultListener
 import org.json.JSONObject
+import java.io.File
+import java.util.*
+
 
 class Paymentpage : AppCompatActivity(), PaymentResultListener {
-    lateinit var fname : EditText
-    lateinit var emailadd : EditText
-    lateinit var phoneno : EditText
-    lateinit var subname : TextView
-    lateinit var amount : TextView
-    lateinit var pay : Button
-    lateinit var pdfname : String
+    lateinit var fname: EditText
+    lateinit var emailadd: EditText
+    lateinit var phoneno: EditText
+    lateinit var subname: TextView
+    lateinit var amount: TextView
+    lateinit var pay: Button
+    lateinit var pdfname: String
     lateinit var price: String
     lateinit var url: String
+    lateinit var encryptname: String
+    lateinit var firebaseDatabase: FirebaseDatabase
+    lateinit var storageRef: StorageReference
+    lateinit var databaseReference: DatabaseReference
+    lateinit var storage: FirebaseStorage
+    lateinit var progressDialog: ProgressDialog
+     var path : String = ""
+    var user : FirebaseUser? = null
+    lateinit var userauth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_paymentpage)
-        Checkout.preload(getApplicationContext());
+
+
+        Checkout.preload(getApplicationContext())
         fname = findViewById(R.id.fullname)
         emailadd = findViewById(R.id.email)
         phoneno = findViewById(R.id.phone)
         subname = findViewById(R.id.subject)
         amount = findViewById(R.id.amount)
         pay = findViewById(R.id.pay)
+        progressDialog = ProgressDialog(this)
         pdfname = intent.getStringExtra("pdfname")
         price = intent.getStringExtra("price")
         url = intent.getStringExtra("url")
+        encryptname = intent.getStringExtra("key")
         subname.text = pdfname
-        amount.text = price
+        amount.text = "₹ "+price
+        storage = Firebase.storage
+        storageRef = storage.reference
+        userauth = FirebaseAuth.getInstance()
+        progressDialog.setTitle("Downloading PDF...");
+        progressDialog.setCanceledOnTouchOutside(false)
+        user = userauth.currentUser
 
         pay.setOnClickListener {
-            if(fname.text.isNullOrBlank() || emailadd.text.isNullOrBlank() || phoneno.text.isNullOrBlank()){
-                Toast.makeText(this,"You can't leave a field empty",Toast.LENGTH_SHORT).show()
-            }
-            else{
+            if (fname.text.isNullOrBlank() || emailadd.text.isNullOrBlank() || phoneno.text.isNullOrBlank()) {
+                Toast.makeText(this, "You can't leave a field empty", Toast.LENGTH_SHORT).show()
+            } else {
                 startPayment()
+
             }
 
         }
-
 
 
     }
@@ -61,30 +96,111 @@ class Paymentpage : AppCompatActivity(), PaymentResultListener {
 
         try {
             val options = JSONObject()
-            options.put("name",fname.text.toString())
-            options.put("description","Transaction for PDF $pdfname \n Price :- $price")
+            options.put("name", fname.text.toString())
+            options.put("description", "Transaction for PDF $pdfname \n Price :- $price")
             //You can omit the image option to fetch the image from dashboard
             //options.put("image","https://s3.amazonaws.com/rzp-mobile/images/rzp.png")
-            options.put("currency","INR")
-            options.put("amount",price+"00")
+            options.put("currency", "INR")
+            options.put("amount", price + "00")
 
             val prefill = JSONObject()
-            prefill.put("email",emailadd.text.toString())
-            prefill.put("contact",phoneno.text.toString())
-            options.put("prefill",prefill)
-            co.open(activity,options)
-        }catch (e: Exception){
-            Toast.makeText(activity,"Error in payment: "+ e.message,Toast.LENGTH_LONG).show()
+            prefill.put("email", emailadd.text.toString())
+            prefill.put("contact", phoneno.text.toString())
+            options.put("prefill", prefill)
+            co.open(activity, options)
+        } catch (e: Exception) {
+            Toast.makeText(activity, "Error in payment: " + e.message, Toast.LENGTH_LONG).show()
             e.printStackTrace()
         }
     }
+
     override fun onPaymentError(errorCode: Int, response: String?) {
-        Toast.makeText(this,"Payment Error $response",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Payment Error $response", Toast.LENGTH_SHORT).show()
 
     }
 
     override fun onPaymentSuccess(razorpayPaymentId: String?) {
-        Toast.makeText(this,"Payment Successful \n Payment ID :- $razorpayPaymentId ",Toast.LENGTH_SHORT).show()
+        var name = ""
+        try {
+            Toast.makeText(
+                this,
+                "Payment Successful \n Payment ID :- $razorpayPaymentId ",
+                Toast.LENGTH_SHORT
+            ).show()
+            val rnds = (100..10000).random()
+            val db = FirebaseDatabase.getInstance()
+             val dbrefer = db.getReference()
+            dbrefer.child("Users").child("Students").child(user!!.uid).addValueEventListener( object:  ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    name = p0.child("Username").value.toString()
+                    dbrefer.child("Transactions").child("Transactions ID :- "+rnds.toString()).child("name").setValue(name)
+                }
+
+            })
+            dbrefer.child("Transactions").child("Transactions ID :- "+rnds.toString()).child("pdf").setValue(pdfname)
+            dbrefer.child("Transactions").child("Transactions ID :- "+rnds.toString()).child("value").setValue(price)
+            val calendar: Calendar = Calendar.getInstance(TimeZone.getDefault())
+            val day = calendar[Calendar.DATE].toString()
+            //Note: +1 the month for current month
+            val month = (calendar[Calendar.MONTH] + 1).toString()
+            val year = calendar[Calendar.YEAR].toString()
+            val date = day+"/"+month+"/"+year
+            dbrefer.child("Transactions").child("Transactions ID :- "+rnds.toString()).child("date").setValue(date)
+            downloadTask()
+        }
+
+        catch (e: Exception){
+            Toast.makeText(this, "Error in success: " + e.message, Toast.LENGTH_LONG).show()
+            e.printStackTrace()
+        }
 
     }
+
+    fun downloadTask() {
+        val httpsReference = storage.getReferenceFromUrl(
+            url
+        )
+        val rootPath =
+            File(Environment.getExternalStorageDirectory(), ".rha/"+encryptname)
+        val localFile = File(rootPath, pdfname + ".pdf")
+
+        if (!rootPath.exists()) {
+            rootPath.mkdirs()
+        }
+        httpsReference.getFile(localFile)
+            .addOnSuccessListener(OnSuccessListener<FileDownloadTask.TaskSnapshot?> {
+                Log.e("firebase ", ";local tem file created  created $localFile")
+                //  updateDb(timestamp,localFile.toString(),position);
+                progressDialog.dismiss()
+                path = localFile.absolutePath
+                Log.i("pathh",path)
+                val intent = Intent(this,Pdfviewer::class.java)
+                intent.putExtra("encryptname",encryptname)
+                intent.putExtra("pdfname",pdfname)
+                intent.putExtra("url",url)
+                intent.putExtra("path",path)
+                startActivity(intent)
+            }).addOnFailureListener(OnFailureListener { exception ->
+                Log.e(
+                    "firebase ",
+                    ";local tem file not created  created $exception"
+                )
+                Toast.makeText(this,"Error:- $exception",Toast.LENGTH_LONG).show()
+            }).addOnProgressListener {
+                progressDialog.show()
+                val progress: Double =
+                    100.0 * it.getBytesTransferred() / it.getTotalByteCount()
+                progressDialog.setMessage(
+                    "Downloaded " +
+                            progress.toInt() + "%"
+                )
+            }
+    }
+
+
+
 }

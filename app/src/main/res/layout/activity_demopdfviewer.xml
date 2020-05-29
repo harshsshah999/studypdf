@@ -4,25 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Pdfviewer">
+    tools:context=".Demopdfviewer">
 
     <com.github.barteksc.pdfviewer.PDFView
-        android:id="@+id/pdfView"
+        android:id="@+id/demopdf"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/fullbutton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <ProgressBar
-        android:id="@+id/pdfprogressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
+
+    <Button
+        android:id="@+id/fullbutton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:layout_marginBottom="10dp"
+        android:onClick="onClick"
+        android:text="Click Here to Buy Full Version!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/demopdf" />
 </androidx.constraintlayout.widget.ConstraintLayout>
