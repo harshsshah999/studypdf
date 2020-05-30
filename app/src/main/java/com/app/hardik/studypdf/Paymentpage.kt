@@ -141,14 +141,22 @@ class Paymentpage : AppCompatActivity(), PaymentResultListener {
                 }
 
             })
+            var month2 = ""
+            var day2 = ""
             dbrefer.child("Transactions").child("Transactions ID :- "+rnds.toString()).child("pdf").setValue(pdfname)
             dbrefer.child("Transactions").child("Transactions ID :- "+rnds.toString()).child("value").setValue(price)
             val calendar: Calendar = Calendar.getInstance(TimeZone.getDefault())
-            val day = calendar[Calendar.DATE].toString()
+            val day = calendar[Calendar.DATE]
             //Note: +1 the month for current month
-            val month = (calendar[Calendar.MONTH] + 1).toString()
+            val month = (calendar[Calendar.MONTH] + 1)
+            if(month<10){
+                month2 = ("0"+month).toString()
+            }
+            if(day<10){
+                day2 = ("0"+day).toString()
+            }
             val year = calendar[Calendar.YEAR].toString()
-            val date = day+"/"+month+"/"+year
+            val date = day2+"/"+month2+"/"+year
             dbrefer.child("Transactions").child("Transactions ID :- "+rnds.toString()).child("date").setValue(date)
             downloadTask()
         }
