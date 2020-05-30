@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-
 public class UserAdapter extends MultiLevelAdapter {
     private Holder mViewHolder;
     private Context mContext;
