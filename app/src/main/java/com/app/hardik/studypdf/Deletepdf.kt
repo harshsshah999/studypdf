@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.Toast
 import com.google.firebase.database.*
 
 class Deletepdf : AppCompatActivity() {
@@ -50,6 +51,7 @@ class Deletepdf : AppCompatActivity() {
 
             override fun onChildRemoved(p0: DataSnapshot) {
                 arrayAdapter.notifyDataSetChanged()
+
             }
 
         })
@@ -61,13 +63,11 @@ class Deletepdf : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                databaseReference.child("Links").child(arrayList.get(position)).setValue(null)
                 databaseReference.child("Links").child(arrayList.get(position)).addListenerForSingleValueEvent(object : ValueEventListener{
                     override fun onCancelled(p0: DatabaseError) {
 
 
                     }
-
                     override fun onDataChange(p0: DataSnapshot) {
                         parentname = p0.child("parent").value.toString()
                         enc = p0.child("encryptname").value.toString()
@@ -91,7 +91,10 @@ class Deletepdf : AppCompatActivity() {
                     }
 
                 })
-
+                databaseReference.child("Links").child(arrayList.get(position)).setValue(null)
+                Toast.makeText(applicationContext,"PDF is Deleted Successfully",Toast.LENGTH_LONG).show()
+                finish()
+                startActivity(intent)
             }
 
         })
