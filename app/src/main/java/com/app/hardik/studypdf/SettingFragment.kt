@@ -25,6 +25,8 @@ private const val ARG_PARAM2 = "param2"
 class SettingFragment : Fragment() {
 
     lateinit var logout : Button
+    lateinit var block : Button
+    lateinit var delete : Button
 
 
     // TODO: Rename and change types of parameters
@@ -47,6 +49,10 @@ class SettingFragment : Fragment() {
         val view: View = inflater!!.inflate(R.layout.fragment_setting, container, false)
 
         logout = view.findViewById(R.id.logoutadmin)
+        block = view.findViewById(R.id.block)
+        delete = view.findViewById(R.id.delete)
+
+
         logout.setOnClickListener {
             activity!!.getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
                 .putBoolean("isLoggedin", false).apply()
@@ -56,6 +62,14 @@ class SettingFragment : Fragment() {
             startActivity(Intent(view.context,LoginPage::class.java))
         }
 
+        block.setOnClickListener {
+            val intent = Intent(view.context,Adminsettings::class.java)
+            startActivity(intent)
+        }
+        delete.setOnClickListener {
+            val intent = Intent(view.context,Deletepdf::class.java)
+            startActivity(intent)
+        }
 
         return view
     }

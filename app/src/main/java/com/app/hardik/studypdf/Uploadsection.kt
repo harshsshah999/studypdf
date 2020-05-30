@@ -16,8 +16,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.tasks.Continuation
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
@@ -115,8 +114,24 @@ class Uploadsection : AppCompatActivity() {
                         Toast.makeText(this,"You can't leave fields empty!",Toast.LENGTH_SHORT).show()
                     }
                     else{
-                        priceval = price.text.toString().trim()
-                    uploadFile2(data.data)
+
+                        dbrefr.child("Links").addListenerForSingleValueEvent(object : ValueEventListener{
+                            override fun onCancelled(p0: DatabaseError) {
+
+                            }
+
+                            override fun onDataChange(p0: DataSnapshot) {
+                                if(p0.hasChild(editTextFilename.text.toString())){
+                                    Toast.makeText(this@Uploadsection,"File Name Already exists",Toast.LENGTH_LONG).show()
+                                }
+                                else {
+                                    priceval = price.text.toString().trim()
+                                    uploadFile2(data.data)
+                                }
+                            }
+
+                        })
+
                     }
                 }
             } else {
@@ -183,6 +198,7 @@ class Uploadsection : AppCompatActivity() {
                 databaseReference.child(key).setValue(upload)
                 dbrefr.child("Links").child(filename).child("url").setValue(downloadUri.toString())
                 dbrefr.child("Links").child(filename).child("encryptname").setValue(key)
+                dbrefr.child("Links").child(filename).child("parent").setValue(filetitle)
             }
             else{
                 Toast.makeText(this,"Error",Toast.LENGTH_SHORT).show()
