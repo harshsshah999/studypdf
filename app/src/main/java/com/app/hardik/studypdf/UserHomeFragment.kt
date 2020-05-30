@@ -63,7 +63,7 @@ class UserHomeFragment : Fragment() {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                welcome.text = "Welcome "+p0.value.toString()
+                welcome.text = "Welcome "+p0.value.toString()+" !"
             }
 
         })

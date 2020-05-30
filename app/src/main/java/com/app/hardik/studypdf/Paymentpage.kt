@@ -199,6 +199,7 @@ class Paymentpage : AppCompatActivity(), PaymentResultListener {
                 intent.putExtra("url",url)
                 intent.putExtra("path",path)
                 startActivity(intent)
+                finish()
             }).addOnFailureListener(OnFailureListener { exception ->
                 Log.e(
                     "firebase ",

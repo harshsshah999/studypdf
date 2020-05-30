@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MyPdfFragment">
+
     <TextView
         android:id="@+id/tittle"
         android:layout_width="0dp"
@@ -13,6 +14,7 @@
         android:padding="10dp"
         android:text="My PDFs"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

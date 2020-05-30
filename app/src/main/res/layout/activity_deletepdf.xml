@@ -27,6 +27,7 @@
         android:layout_marginBottom="10dp"
         android:gravity="center"
         android:text="Click to Delete!"
+        android:textColor="@color/colorPrimaryDark"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

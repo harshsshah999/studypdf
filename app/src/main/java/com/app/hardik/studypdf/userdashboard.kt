@@ -4,9 +4,11 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -78,4 +80,24 @@ class userdashboard : AppCompatActivity() {
                 return false
             }
         }
+
+    //Code for informing and closing app
+    private var exit = false
+    override fun onBackPressed() {
+        if (exit) {
+            finish() // finish activity
+        } else {
+            bottomNavigation.checkItem(R.id.navigation_userhome)
+            openFragment(UserHomeFragment.newInstance("",""))
+            Toast.makeText(
+                this, "Press Back again to Exit.",
+                Toast.LENGTH_SHORT
+            ).show()
+            exit = true
+            Handler().postDelayed(Runnable { exit = false }, 3 * 1000)
+        }
+    }
+    internal fun BottomNavigationView.checkItem(actionId: Int) {
+        menu.findItem(actionId)?.isChecked = true
+    }
 }

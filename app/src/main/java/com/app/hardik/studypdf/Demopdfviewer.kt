@@ -1,12 +1,15 @@
 package com.app.hardik.studypdf
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.Toast
 import com.github.barteksc.pdfviewer.PDFView
 import java.io.File
 
@@ -24,6 +27,9 @@ class Demopdfviewer : AppCompatActivity() {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
         setContentView(R.layout.activity_demopdfviewer)
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+
+
+
         pdfView = findViewById(R.id.demopdf)
         full = findViewById(R.id.fullbutton)
          pdfname = intent.getStringExtra("pdfname2")
@@ -49,4 +55,9 @@ class Demopdfviewer : AppCompatActivity() {
         intent.putExtra("key",key)
         startActivity(intent)
     }
-}
+
+
+    override fun onBackPressed() {
+            finish()
+        }
+    }

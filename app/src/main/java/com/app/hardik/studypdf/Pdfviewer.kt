@@ -12,9 +12,12 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentTransaction
 import com.github.barteksc.pdfviewer.PDFView
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.io.*
 import java.net.URL
 import java.net.URLConnection
@@ -39,5 +42,11 @@ class Pdfviewer : AppCompatActivity() {
 
 
     }
+
+    override fun onBackPressed() {
+        finish()
+        super.onBackPressed()
+    }
+
 
 }

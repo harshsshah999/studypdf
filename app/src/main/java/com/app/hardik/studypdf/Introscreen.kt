@@ -51,32 +51,27 @@ class Introscreen : AppCompatActivity() {
         }
         fun change(){
             if (seek.progress == 0){
-                welcomeimg.setImageResource(R.drawable.ic_launcher_background)
-                welcometxt.setText("Introtxt1")
+                welcomeimg.setImageResource(R.drawable.intro2)
+                welcometxt.setText("Technology is not an event. It's just part of everyday learning")
                 nextbtn.text = "Next"
                 return
             }
             else{
                 if (seek.progress == 1){
-                    welcomeimg.setImageResource(R.drawable.appintro_indicator_dot_grey)
-                    welcometxt.setText("Introtxt2")
+                    welcomeimg.setImageResource(R.drawable.intro1)
+                    welcometxt.setText("Learning is MORE effective when it is ACTIVE rather than a passive process.")
                     nextbtn.text = "Next"
                     nextbtn.text = "Next"
                     return
                 }
                 else{
                     if  (seek.progress == 2) {
-                        welcomeimg.setImageResource(R.drawable.appintro_indicator_dot_white)
-                        welcometxt.setText("Introtxt3")
+                        welcomeimg.setImageResource(R.drawable.final1)
+                        welcometxt.setText("Accessible anytime anywhere!")
                         nextbtn.text = "Next"
                         return
                     }
-                    else{
-                        welcomeimg.setImageResource(R.drawable.ic_appintro_done_white)
-                        welcometxt.setText("Introtxt4")
-                        nextbtn.text = "Done"
-                        return
-                    }
+
                 } }
         }
 

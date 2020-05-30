@@ -5,9 +5,11 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -73,4 +75,19 @@ class Admindashboard : AppCompatActivity() {
                return false
            }
        }
+    private var exit = false
+    override fun onBackPressed() {
+        if (exit) {
+            finish() // finish activity
+        } else {
+            bottomNavigation.checkItem(R.id.navigation_home)
+            openFragment(HomeFragment.newInstance("",""))
+            Toast.makeText(
+                this, "Press Back again to Exit.",
+                Toast.LENGTH_SHORT
+            ).show()
+            exit = true
+            Handler().postDelayed(Runnable { exit = false }, 3 * 1000)
+        }
+    }
 }

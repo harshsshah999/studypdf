@@ -61,24 +61,30 @@ class MainActivity : AppCompatActivity() {
                         if (isOnline(this@MainActivity)){
                             if (flag == "1"){
                                 startActivity(Intent(this@MainActivity,userdashboard::class.java))
+                                finish()
                             }
                             else if (flag == "2"){
                                 startActivity(Intent(this@MainActivity,Admindashboard::class.java))
+                                finish()
                             }
                             else{
                                 startActivity(Intent(this@MainActivity,LoginPage::class.java))
+                                finish()
                             }
 
                         }
                         else{
                             if (flag == "1"){
                                 startActivity(Intent(this@MainActivity,userdashboard::class.java))
+                                finish()
                             }
                             else if (flag == "2"){
                                 startActivity(Intent(this@MainActivity,Admindashboard::class.java))
+                                finish()
                             }
                             else{
                                 startActivity(Intent(this@MainActivity,LoginPage::class.java))
+                                finish()
                             }
                             Toast.makeText(this@MainActivity,"You are offline",Toast.LENGTH_LONG).show()
                         }
