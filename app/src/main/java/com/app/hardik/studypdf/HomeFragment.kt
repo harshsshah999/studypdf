@@ -186,7 +186,7 @@ class HomeFragment : Fragment() {
                     cost = 0
                     count += 1
                 }
-                revenueno.text = Total_revenue.toString() + " ₹"
+                revenueno.text = Total_revenue.toString()
 
 
                 //Sorting lists associated with transactions according to dates

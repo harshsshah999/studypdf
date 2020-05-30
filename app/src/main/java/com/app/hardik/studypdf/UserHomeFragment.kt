@@ -74,7 +74,7 @@ class UserHomeFragment : Fragment() {
         //Default Element to include
         StreamList = ArrayList<RecyclerViewItem>() as MutableList<Item>
         var item = Item(0)
-        item.setText("Feel Free to Buy")
+        item.setText("All Available list of Notes!")
         StreamList.add(item)
 
         readlist()
