@@ -1,10 +1,10 @@
 package com.app.hardik.studypdf
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,9 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.fragment.app.Fragment
 import com.google.firebase.database.*
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -164,6 +166,29 @@ class SearchFragment : Fragment() {
             })
         }, 5000)
 
+        searchlist.setOnItemClickListener(object : AdapterView.OnItemClickListener {
+           override fun onItemClick(
+                arg0: AdapterView<*>?,
+                arg1: View?,
+                position: Int,
+                id: Long
+            ) {
+
+               databaseReference.child("SubjectPath").addValueEventListener(object :
+                   ValueEventListener {
+                   override fun onCancelled(p0: DatabaseError) {
+
+
+                   }
+
+                   override fun onDataChange(p0: DataSnapshot) {
+
+                   }
+
+
+               })
+            }
+        })
         return view
     }
 
