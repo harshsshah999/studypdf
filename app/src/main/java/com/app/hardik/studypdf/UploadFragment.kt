@@ -2,6 +2,7 @@ package com.app.hardik.studypdf
 
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -81,7 +82,8 @@ class UploadFragment : Fragment() {
             item.setSecondText("Long Click Here to Cancel and select other subject")
             view.gotoupload.setActivated(true)
             gotoupload.setEnabled(true)
-
+            gotoupload.setBackgroundResource(R.drawable.my_bg_btn)
+            gotoupload.setTextColor(Color.rgb(255,160,0))
         }
         StreamList.add(item)
         db= FirebaseDatabase.getInstance()

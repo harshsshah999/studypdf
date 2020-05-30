@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -106,6 +107,8 @@ class Uploadsection : AppCompatActivity() {
             if (data.data != null) {
                 //uploading the file
                 upload.isEnabled = true
+                upload.setBackgroundResource(R.drawable.my_bg_btn)
+                upload.setTextColor(Color.rgb(255,160,0))
                 Toast.makeText(this,"Type Appropriate Name for your File!",Toast.LENGTH_SHORT).show()
                 upload.setOnClickListener{
                     if(editTextFilename.text.isNullOrBlank() || price.text.isNullOrBlank()){

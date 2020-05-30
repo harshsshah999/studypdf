@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
 
             //Global declaration of variables
             lateinit var anim_fade_in : Animation
-            lateinit var anim_fade_out : Animation
             lateinit var logo : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,19 +42,7 @@ class MainActivity : AppCompatActivity() {
 
             //Create Animation
             anim_fade_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in)
-            anim_fade_out = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out)
 
-            //Animation Class functions
-            anim_fade_out.setAnimationListener(object : AnimationListener {
-                override fun onAnimationStart(animation: Animation) {
-                }
-                override fun onAnimationEnd(animation: Animation) {
-                        logo.setImageResource(R.drawable.opened_book)
-                        logo.startAnimation(anim_fade_in)
-                }
-                override fun onAnimationRepeat(animation: Animation) {
-                }
-            })
             anim_fade_in.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation) {
             }
@@ -112,7 +99,8 @@ class MainActivity : AppCompatActivity() {
         })
 
             //Trigger Animation
-            logo.startAnimation(anim_fade_out)
+        logo.setImageResource(R.drawable.finalappicon)
+        logo.startAnimation(anim_fade_in)
     }
 
 }

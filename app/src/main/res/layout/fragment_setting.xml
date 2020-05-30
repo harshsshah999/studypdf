@@ -24,11 +24,41 @@
         android:id="@+id/logoutadmin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/my_bg_btn"
         android:text="Log Out"
+        android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button"
+        style="@android:style/Widget.Button"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Block User"
+        android:background="@drawable/my_bg_btn"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toTopOf="@+id/logoutadmin"
+        app:layout_constraintEnd_toStartOf="@+id/textView16"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textView16"
+        app:layout_constraintTop_toTopOf="@+id/textView16" />
+
+    <Button
+        android:id="@+id/Delete_pdf"
+        style="@android:style/Widget.Button"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Delete PDF"
+        android:background="@drawable/my_bg_btn"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toTopOf="@+id/logoutadmin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -244,11 +244,14 @@ public class MyAdapter extends MultiLevelAdapter {
 
                     }
                     else if (Apple.INSTANCE.getUpdateClicked() == 1){
+                        int flag = 0;
                         if(mListItems.get(getAdapterPosition()).getLevel() == 3){
                             Toast.makeText(mContext,"You Can't Add here!",Toast.LENGTH_SHORT).show();
                             return false;
                         }
-
+                        if(mListItems.get(getAdapterPosition()).getLevel() == 2){
+                            flag = 1;
+                        }
                         final String finalPath2 = path+"/";
                        final String title = path+"-";
                         alert.setTitle("Adding new element...");
@@ -279,6 +282,8 @@ public class MyAdapter extends MultiLevelAdapter {
                             }
                         });
 
+
+                        final int finalFlag = flag;
                         alert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 db = FirebaseDatabase.getInstance();
@@ -294,8 +299,14 @@ public class MyAdapter extends MultiLevelAdapter {
                                 }
                                 Log.i("finall add",adder);
                                 dbrefer.child(adder).setValue(adder);
-                                dbrefer.child("SubjectPath").child(subname).setValue(adder);
+                                //if(mListItems.get(getAdapterPosition()).getLevel() == 3)
+                                if(finalFlag == 1){
+                                    dbrefer.child("SubjectPath").child(subname).setValue(adder);
+                                }
+
                                 Toast.makeText(mContext,"New Element added successfully,Swipe Down to Refresh",Toast.LENGTH_LONG).show();
+
+
 //                                listFragment.reload();
                             }
                         });

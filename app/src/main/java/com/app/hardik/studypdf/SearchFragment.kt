@@ -164,37 +164,41 @@ class SearchFragment : Fragment() {
                 }
 
             })
+            searchlist.setOnItemClickListener(object : AdapterView.OnItemClickListener {
+                override fun onItemClick(
+                    arg0: AdapterView<*>?,
+                    arg1: View?,
+                    position: Int,
+                    id: Long
+                ) {
+
+                    databaseReference.child("SubjectPath").addValueEventListener(object :
+                        ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError) {
+
+
+                        }
+
+                        override fun onDataChange(p0: DataSnapshot) {
+                            val name = tempsublist.get(position)
+                            if(name.isNullOrBlank() || name.isEmpty()){}
+                            else{
+                                val subname = name.substringBefore("\n"," ")
+                                Log.i("subbname",subname)
+                                val path = p0.child(subname).value.toString()
+                                val intent = Intent(view.context,Pdflist::class.java)
+                                intent.putExtra("name",subname)
+                                intent.putExtra("path",path)
+                                startActivity(intent)
+                            }
+
+                        }
+
+                    })
+                }
+            })
         }, 5000)
 
-        searchlist.setOnItemClickListener(object : AdapterView.OnItemClickListener {
-           override fun onItemClick(
-                arg0: AdapterView<*>?,
-                arg1: View?,
-                position: Int,
-                id: Long
-            ) {
-
-               databaseReference.child("SubjectPath").addValueEventListener(object :
-                   ValueEventListener {
-                   override fun onCancelled(p0: DatabaseError) {
-
-
-                   }
-
-                   override fun onDataChange(p0: DataSnapshot) {
-                       val name = tempsublist.get(position)
-                       val subname = name.substringBefore("\n"," ")
-                            Log.i("subbname",subname)
-                       val path = p0.child(subname).value.toString()
-                       val intent = Intent(view.context,Pdflist::class.java)
-                       intent.putExtra("name",subname)
-                       intent.putExtra("path",path)
-                       startActivity(intent)
-                   }
-
-               })
-            }
-        })
         return view
     }
 
@@ -230,8 +234,11 @@ class SearchFragment : Fragment() {
         newsublist.clear()
         for (value in subpath) {
             if (value.toUpperCase().contains(name.toUpperCase().toRegex())) {
+                Log.i("subpath",value)
                 Depflag = value.substring(value.indexOf("/") + 1, value.lastIndexOf("/") - 1)
+                Log.i("subpath2",Depflag)
                 Depflag = Depflag.substring(Depflag.indexOf("/") + 1, Depflag.lastIndexOf("/"))
+                Log.i("subpath3",Depflag)
                 newsublist.add(c,subkey[subpath.indexOf(value)] + "\n" + Depflag)
                 c += 1
             }

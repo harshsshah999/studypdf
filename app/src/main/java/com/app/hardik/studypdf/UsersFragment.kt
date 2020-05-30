@@ -9,6 +9,7 @@ import android.os.Handler
 import android.text.method.TextKeyListener.clear
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -40,7 +41,7 @@ class UsersFragment : Fragment() {
     lateinit var names: String
     lateinit var emails: String
     lateinit var revenue: String
-
+    lateinit var nav_menu: Menu
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -60,17 +61,12 @@ class UsersFragment : Fragment() {
         // Inflate the layout for this fragment
         val view: View = inflater!!.inflate(R.layout.fragment_users, container, false)
 
-        Handler().postDelayed({val textView = TextView(view.context)
-            val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT )
-            var width = root2.measuredWidth
-            var width2 = width*40/100
-            params.setMargins(width2,0,0,0)
-            textView.layoutParams = params
-            textView.setTextColor(Color.BLACK)
-            textView.text = "Users"
-            textView.textSize = 35F
-            root2.addView(textView)},500)
-
+        nav_menu = bottomNavigation.menu
+        nav_menu.findItem(R.id.navigation_settings).setVisible(false)
+        nav_menu.findItem(R.id.navigation_upload).setVisible(false)
+        nav_menu.findItem(R.id.navigation_home).setVisible(false)
+        nav_menu.findItem(R.id.navigation_list).setVisible(false)
+        nav_menu.findItem(R.id.navigation_users).setVisible(false)
         //Creating Cards In view
         val handler = Handler()
         handler.postDelayed(object : Runnable {
@@ -86,6 +82,12 @@ class UsersFragment : Fragment() {
                         new()
                         count = count + 1
                     }
+                    nav_menu = bottomNavigation.menu
+                    nav_menu.findItem(R.id.navigation_settings).setVisible(true)
+                    nav_menu.findItem(R.id.navigation_upload).setVisible(true)
+                    nav_menu.findItem(R.id.navigation_home).setVisible(true)
+                    nav_menu.findItem(R.id.navigation_list).setVisible(true)
+                    nav_menu.findItem(R.id.navigation_users).setVisible(true)
                 }
                 else {
                     handler.postDelayed(this, 1000)//1 sec delay
@@ -118,6 +120,7 @@ class UsersFragment : Fragment() {
 
     fun new() {
         // Initialize a new CardView instance
+
         val card_view = CardView(view!!.context)
         card_view.id = count
 
@@ -129,7 +132,7 @@ class UsersFragment : Fragment() {
 
         // Set bottom margin for card view
         layoutParams.bottomMargin = 10
-        layoutParams.topMargin = 15
+        layoutParams.topMargin = 40
         layoutParams.leftMargin = 8
         layoutParams.rightMargin = 8
 
@@ -143,7 +146,7 @@ class UsersFragment : Fragment() {
         card_view.setContentPadding(25, 25, 25, 25)
 
         // Set the card view background color
-        card_view.setCardBackgroundColor(Color.rgb(255,27,118))
+        card_view.setCardBackgroundColor(Color.rgb(98,0,238))
 
         // Set card view elevation
         card_view.cardElevation = 20F
@@ -171,12 +174,12 @@ class UsersFragment : Fragment() {
         val imageView = ImageView(view?.context)
         val params = ActionBar.LayoutParams(55, 55)
         var width = root2.measuredWidth
-        var width2 = width*20/100
+        var width2 = width*15/100
         params.setMargins(width-width2,80,0,0)
         imageView.layoutParams = params
         imageView.setImageResource(R.drawable.ic_appintro_arrow_forward_white)
         imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-        imageView.setBackgroundColor(Color.rgb(98,0,238))
+        imageView.setBackgroundColor(Color.TRANSPARENT)
         return imageView
     }
 

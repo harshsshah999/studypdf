@@ -11,37 +11,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:hint="Enter Price for Your PDF :  \u20B9"
+        android:hint="Enter Price for your PDF :  ₹"
+        android:inputType="number"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:inputType = "number"
-        app:layout_constraintBottom_toTopOf="@+id/editTextFileName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/upload" />
+        android:textColor="#20C626"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/editTextFileName"
+        app:layout_constraintVertical_bias="0.102"
+        tools:layout_editor_absoluteX="0dp" />
 
     <Button
         android:id="@+id/upload"
         android:layout_width="411dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="84dp"
+        android:background="@drawable/inactive_btn"
         android:text="Upload File"
+        android:textColor="@color/Gray"
         app:layout_constraintBottom_toTopOf="@+id/editTextFileName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chooser" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/editTextFileName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:hint="Enter a name for your file"
+        android:layout_marginTop="188dp"
+        android:hint="Enter a custom name for your file:"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textColor="@color/colorAccent"
+        app:layout_constraintTop_toBottomOf="@+id/chooser"
+        tools:layout_editor_absoluteX="0dp" />
 
     <Button
         android:id="@+id/chooser"
@@ -49,22 +51,23 @@
         android:layout_height="wrap_content"
         android:onClick="choosefile"
         android:text="Choose File!"
+        android:background="@drawable/my_bg_btn"
+        android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toTopOf="@+id/upload"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.419" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/progressbarupload">
 
 
         <TextView
@@ -74,16 +77,6 @@
             android:text="No file selected"
             android:textAlignment="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
-
-        <TextView
-            android:id="@+id/textViewUploads"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="View Uploads"
-            android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-            android:textColor="@color/colorPrimaryDark" />
 
     </LinearLayout>
 

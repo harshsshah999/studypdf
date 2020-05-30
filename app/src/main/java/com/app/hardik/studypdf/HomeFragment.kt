@@ -17,7 +17,6 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_admindashboard.*
@@ -95,7 +94,12 @@ class HomeFragment : Fragment() {
         //spinner
         spinner = view.findViewById(R.id.progressBar1)
         spinner.visibility = View.VISIBLE
-
+        nav_menu = bottomNavigation.menu
+        nav_menu.findItem(R.id.navigation_settings).setVisible(false)
+        nav_menu.findItem(R.id.navigation_upload).setVisible(false)
+        nav_menu.findItem(R.id.navigation_home).setVisible(false)
+        nav_menu.findItem(R.id.navigation_list).setVisible(false)
+        nav_menu.findItem(R.id.navigation_users).setVisible(false)
 
         if (menu.isEmpty()){
             Log.i("Empty","True")
@@ -248,6 +252,7 @@ class HomeFragment : Fragment() {
                             new()                       //User information
                             count = count + 1
                         }
+
                         spinner.visibility = View.GONE
                         nav_menu = bottomNavigation.menu
                         nav_menu.findItem(R.id.navigation_settings).setVisible(true)
@@ -272,11 +277,6 @@ class HomeFragment : Fragment() {
             nav_menu.findItem(R.id.navigation_list).setVisible(true)
             nav_menu.findItem(R.id.navigation_users).setVisible(true)
             Toast.makeText(view.context,"Check network connection !",Toast.LENGTH_LONG).show()
-        }
-        val pullToRefresh: SwipeRefreshLayout = view.findViewById(R.id.pullToRefresh)
-        pullToRefresh.setOnRefreshListener {
-            reload()
-            pullToRefresh.isRefreshing = false
         }
 
         // Inflate the layout for this fragment
@@ -312,6 +312,7 @@ class HomeFragment : Fragment() {
     }
 
     fun newdatecard() {
+
         // Initialize a new CardView instance
         val card_view2 = CardView(view!!.context)
 
@@ -322,7 +323,7 @@ class HomeFragment : Fragment() {
         )
 
         // Set bottom margin for card view
-        layoutParams.bottomMargin = 15
+        layoutParams.topMargin = 40
 
         layoutParams.leftMargin = 20
 
@@ -336,13 +337,7 @@ class HomeFragment : Fragment() {
         card_view2.setContentPadding(25, 12, 25, 12)
 
         // Set the card view background color
-        card_view2.setCardBackgroundColor(Color.rgb(254,137,1))
-
-        // Set card view elevation
-        card_view2.cardElevation = 20F
-
-        // Set card view maximum elevation
-        card_view2.maxCardElevation = 12F
+        card_view2.setCardBackgroundColor(Color.WHITE)
 
         // Set a click listener for card view
         card_view2.setOnClickListener {
@@ -352,16 +347,6 @@ class HomeFragment : Fragment() {
 
         // Add an TextView to the CardView
         card_view2.addView(generatedate())
-
-        //Add horizontal line
-        val line = View(view!!.context)
-        val layoutParamsline = ActionBar.LayoutParams(
-            ActionBar.LayoutParams.MATCH_PARENT, // View width
-            2 // View height
-        )
-        line.layoutParams = layoutParamsline
-        line.setBackgroundColor(Color.GRAY)
-        transactions.addView(line)
 
         // Finally, add the CardView in root layout
         transactions.addView(card_view2)
@@ -379,7 +364,7 @@ class HomeFragment : Fragment() {
         )
 
         // Set bottom margin for card view
-        layoutParams.bottomMargin = 20
+        layoutParams.bottomMargin = 40
         layoutParams.leftMargin = 8
         layoutParams.rightMargin = 8
 
@@ -453,7 +438,7 @@ class HomeFragment : Fragment() {
         val textView = TextView(view?.context)
         val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT )
         textView.layoutParams = params
-        textView.setTextColor(Color.WHITE)
+        textView.setTextColor(Color.rgb(254,137,1))
         textView.text = dates
         textView.textSize = 15F
         return textView

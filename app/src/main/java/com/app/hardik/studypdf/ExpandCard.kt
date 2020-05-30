@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 
@@ -14,11 +15,15 @@ class ExpandCard : AppCompatActivity() {
         override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expand_card)
+        val backbtn = findViewById<Button>(R.id.Back)
         val Username = findViewById<TextView>(R.id.Expand_Username)
         Username.text = menu.get(position).toString()
         val Revenue = findViewById<TextView>(R.id.Revenue)
-        Revenue.text = "Total Revenue: " + finalcost.get(position).toString() + " Rs"
+        Revenue.text = "Total Revenue: ₹" + finalcost.get(position).toString()
 
+            backbtn.setOnClickListener {
+                finish()
+            }
 
             val list: MutableList<String> = ArrayList()
 
@@ -32,7 +37,7 @@ class ExpandCard : AppCompatActivity() {
             {
                 pdfname = pdf.get(costnamefirst).toString()
                 pdfcost = costs.get(costnamefirst).toString()
-                list.add(count,"PDF: "+pdfname+"   Cost: "+pdfcost+" Rs")
+                list.add(count,pdfname+"   ₹"+pdfcost)
                 count += 1
             }
             costnamefirst += 1

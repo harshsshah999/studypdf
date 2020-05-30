@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -39,6 +40,7 @@ class UserProfileFragment : Fragment() {
     lateinit var education_value : String
     lateinit var logout : Button
     private lateinit var spinner: ProgressBar
+    lateinit var nav_menu: Menu
 
     var user : FirebaseUser? = null
     // TODO: Rename and change types of parameters
@@ -73,6 +75,7 @@ class UserProfileFragment : Fragment() {
         email.text = user!!.email
 
         spinner.visibility = View.VISIBLE
+
 
         view.setOnClickListener{
             it.hideKeyboard()

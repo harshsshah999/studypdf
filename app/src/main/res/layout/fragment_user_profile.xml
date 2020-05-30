@@ -59,12 +59,12 @@
         android:id="@+id/Username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="52dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.632"
-        app:layout_constraintStart_toEndOf="@+id/textView12"
+        app:layout_constraintStart_toEndOf="@+id/textView17"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.278" />
 
@@ -89,7 +89,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.546"
-        app:layout_constraintStart_toEndOf="@+id/textView14"
+        app:layout_constraintStart_toEndOf="@+id/textView17"
         app:layout_constraintTop_toBottomOf="@+id/Username"
         app:layout_constraintVertical_bias="0.294" />
 
@@ -105,7 +105,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/EducationTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.559"
-        app:layout_constraintStart_toEndOf="@+id/textView14"
+        app:layout_constraintStart_toEndOf="@+id/textView17"
         app:layout_constraintTop_toBottomOf="@+id/Email"
         app:layout_constraintVertical_bias="0.433" />
 
@@ -126,6 +126,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Log Out"
+        android:background="@drawable/my_bg_btn"
+        android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
