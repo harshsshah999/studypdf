@@ -16,6 +16,8 @@ import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_admindashboard.*
@@ -114,12 +116,13 @@ class HomeFragment : Fragment() {
         var Done :Boolean = false           //Used to know if fetching from dg is over or not
         database = FirebaseDatabase.getInstance()
         databaseReference = database.getReference()
-        databaseReference.child("Users").child("Students").addValueEventListener(object :
+        databaseReference.child("Users").child("Students").addListenerForSingleValueEvent(object :
             ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
             override fun onDataChange(p0: DataSnapshot) {
                 //Saves usernames in menu list
+               // reload()
                 p0.children.mapNotNullTo(menu) {
                     it.child("Username").value
                 }
@@ -135,12 +138,13 @@ class HomeFragment : Fragment() {
                 }
             }
         })
-        databaseReference.child("Transactions").addValueEventListener(object :
+        databaseReference.child("Transactions").addListenerForSingleValueEvent(object :
             ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onDataChange(p0: DataSnapshot) {
+               // reload()
                 p0.children.mapNotNullTo(costs) {
                     it.child("value").value
                 }
@@ -269,6 +273,11 @@ class HomeFragment : Fragment() {
             nav_menu.findItem(R.id.navigation_users).setVisible(true)
             Toast.makeText(view.context,"Check network connection !",Toast.LENGTH_LONG).show()
         }
+        val pullToRefresh: SwipeRefreshLayout = view.findViewById(R.id.pullToRefresh)
+        pullToRefresh.setOnRefreshListener {
+            reload()
+            pullToRefresh.isRefreshing = false
+        }
 
         // Inflate the layout for this fragment
         return view
@@ -292,6 +301,14 @@ class HomeFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    fun reload () {
+        val ft: FragmentTransaction = fragmentManager!!.beginTransaction()
+        if (Build.VERSION.SDK_INT >= 26) {
+            ft.setReorderingAllowed(false)
+        }
+        ft.detach(this).attach(this).commit()
     }
 
     fun newdatecard() {

@@ -152,8 +152,14 @@ class Paymentpage : AppCompatActivity(), PaymentResultListener {
             if(month<10){
                 month2 = ("0"+month).toString()
             }
+            else {
+                month2 = month.toString()
+            }
             if(day<10){
                 day2 = ("0"+day).toString()
+            }
+            else {
+                day2 = day.toString()
             }
             val year = calendar[Calendar.YEAR].toString()
             val date = day2+"/"+month2+"/"+year

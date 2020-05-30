@@ -175,6 +175,7 @@ class ListFragment : Fragment() {
     }
 
 
+
     fun reload () {
         val ft: FragmentTransaction = fragmentManager!!.beginTransaction()
         if (Build.VERSION.SDK_INT >= 26) {
@@ -182,7 +183,6 @@ class ListFragment : Fragment() {
         }
         ft.detach(this).attach(this).commit()
     }
-
 
 
     companion object {
