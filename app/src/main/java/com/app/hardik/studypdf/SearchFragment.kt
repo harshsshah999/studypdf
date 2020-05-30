@@ -182,9 +182,15 @@ class SearchFragment : Fragment() {
                    }
 
                    override fun onDataChange(p0: DataSnapshot) {
-
+                       val name = tempsublist.get(position)
+                       val subname = name.substringBefore("\n"," ")
+                            Log.i("subbname",subname)
+                       val path = p0.child(subname).value.toString()
+                       val intent = Intent(view.context,Pdflist::class.java)
+                       intent.putExtra("name",subname)
+                       intent.putExtra("path",path)
+                       startActivity(intent)
                    }
-
 
                })
             }

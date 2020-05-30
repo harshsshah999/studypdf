@@ -185,6 +185,7 @@ class Paymentpage : AppCompatActivity(), PaymentResultListener {
         if (!rootPath.exists()) {
             rootPath.mkdirs()
         }
+
         httpsReference.getFile(localFile)
             .addOnSuccessListener(OnSuccessListener<FileDownloadTask.TaskSnapshot?> {
                 Log.e("firebase ", ";local tem file created  created $localFile")

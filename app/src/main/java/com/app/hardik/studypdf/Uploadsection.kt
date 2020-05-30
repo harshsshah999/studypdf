@@ -26,6 +26,7 @@ class Uploadsection : AppCompatActivity() {
     lateinit var firebaseDatabase: FirebaseDatabase
     lateinit var firebaseStorage: StorageReference
     lateinit var databaseReference: DatabaseReference
+    lateinit var dbrefr : DatabaseReference
     val PICK_PDF_CODE = 2342
     lateinit var textViewStatus: TextView
     lateinit var progressBar: ProgressBar
@@ -53,6 +54,7 @@ class Uploadsection : AppCompatActivity() {
         editTextFilename.setText(filetitle)
         firebaseDatabase = FirebaseDatabase.getInstance()
         databaseReference = firebaseDatabase.getReference("Uploads/" + path)
+        dbrefr = firebaseDatabase.getReference()
         firebaseStorage = FirebaseStorage.getInstance().getReference()
         upload.isEnabled = false
     }
@@ -174,7 +176,10 @@ class Uploadsection : AppCompatActivity() {
                 )
                 textViewStatus.text = "File Uploaded Successfully"
                 progressBar.visibility = View.GONE
-                databaseReference.child(databaseReference.push().getKey()!!).setValue(upload)
+                val key = databaseReference.push().getKey()!!
+                databaseReference.child(key).setValue(upload)
+                dbrefr.child("Links").child(filename).child("url").setValue(downloadUri.toString())
+                dbrefr.child("Links").child(filename).child("encryptname").setValue(key)
             }
             else{
                 Toast.makeText(this,"Error",Toast.LENGTH_SHORT).show()

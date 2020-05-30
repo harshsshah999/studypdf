@@ -66,7 +66,7 @@ public class Pdfadapter extends MultiLevelAdapter {
         }
         mViewHolder.mTitle.setText(mItem.getText());
         mViewHolder.mSubtitle.setText(mItem.getSecondText());
-        if(mItem.getSecondText().equals("Click to buy them"))
+        if(mItem.getSecondText().equals("Click to buy them")||mItem.getSecondText().equals("Click to Open!"))
         {
         mViewHolder.mExpandButton.setVisibility(View.GONE);
         }
