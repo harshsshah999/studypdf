@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,18 +63,19 @@ public class UserAdapter extends MultiLevelAdapter {
             case 2:
                 holder.itemView.setBackgroundResource(R.drawable.customshape3);
                 ViewGroup.MarginLayoutParams params2 = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
-                params2.leftMargin = 200; params2.rightMargin = 200;
+                params2.leftMargin = 130; params2.rightMargin = 130;
                 break;
             case 3:
                 holder.itemView.setBackgroundResource(R.drawable.customshape4);
                 ViewGroup.MarginLayoutParams params3 = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
-                params3.leftMargin = 300; params3.rightMargin = 300;
+                params3.leftMargin = 165; params3.rightMargin = 165;
                 break;
             default:
                 holder.itemView.setBackgroundResource(R.drawable.customshape);
                 break;
         }
         mViewHolder.mTitle.setText(mItem.getText());
+        mViewHolder.mTitle.setGravity(Gravity.CENTER_VERTICAL);
 //        mViewHolder.mSubtitle.setText(mItem.getSecondText());
 
         if (mItem.hasChildren() && mItem.getChildren().size() > 0) {

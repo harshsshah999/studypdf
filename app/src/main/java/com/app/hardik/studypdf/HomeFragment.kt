@@ -21,8 +21,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
+import java.util.stream.Collectors
+import kotlin.collections.ArrayList
 
 
 var menu = mutableListOf<Any>()         //List of usernames from Users
@@ -66,6 +71,7 @@ class HomeFragment : Fragment() {
     lateinit var pdfs: String
     lateinit var revenue: String
     lateinit var dates: String
+    val dateMap = hashMapOf<String,String>()
 
     var sorteddates = listOf<Any>()
 
@@ -149,7 +155,6 @@ class HomeFragment : Fragment() {
                 if(p0.exists()){
                     fruitmodel.name =  p0.childrenCount.toString()
 
-
                 }
                 else {
                     fruitmodel.name =  "NA"
@@ -162,7 +167,7 @@ class HomeFragment : Fragment() {
             ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
-            @RequiresApi(Build.VERSION_CODES.O)
+          //  @RequiresApi(Build.VERSION_CODES.O)
             override fun onDataChange(p0: DataSnapshot) {
                 var fruitmodel2 = FruitModel()
                 // reload()
@@ -219,11 +224,19 @@ class HomeFragment : Fragment() {
                     false
                 )
                 //Sorting lists associated with transactions according to dates
-                val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-
+              //  val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+               var format = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+                    var date1 : Date? = null
                 sorteddates = date.sortedByDescending {
-                    LocalDate.parse(it as CharSequence?, dateTimeFormatter)
+                   // LocalDate.parse(it as CharSequence?, dateTimeFormatter)
+                    format.parse(it.toString())
                 }
+                for ( i in date){
+                    val new = i.toString().replace("/","")
+                    Log.i("newdate",new)
+                    dateMap.put(i.toString(),new)
+                }
+
                 count = sorteddates.indexOfFirst { true }
                 last  = sorteddates.indexOfLast { true }
                 index = date.indexOfFirst { true }
