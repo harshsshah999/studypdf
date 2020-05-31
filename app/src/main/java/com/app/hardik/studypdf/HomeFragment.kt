@@ -1,7 +1,6 @@
 package com.app.hardik.studypdf
 
 import android.app.ActionBar
-import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -11,22 +10,20 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
-import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.activity_admindashboard.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_users.*
-import kotlinx.android.synthetic.main.row_layout.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
-import kotlin.collections.ArrayList
+
 
 var menu = mutableListOf<Any>()         //List of usernames from Users
 var email = mutableListOf<Any>()        //List of emails from Users
@@ -61,6 +58,9 @@ class HomeFragment : Fragment() {
     var costnamefirst: Int = 0
     var costnamelast: Int = 0
     var cost: Int = 0
+    lateinit var recyclerView: RecyclerView
+    lateinit var imageModelArrayList: ArrayList<FruitModel>
+    lateinit var adapter: HotizontalAdapter
 
     lateinit var names: String
     lateinit var pdfs: String
@@ -95,11 +95,22 @@ class HomeFragment : Fragment() {
         spinner = view.findViewById(R.id.progressBar1)
         spinner.visibility = View.VISIBLE
         nav_menu = bottomNavigation.menu
+
+
         nav_menu.findItem(R.id.navigation_settings).setVisible(false)
         nav_menu.findItem(R.id.navigation_upload).setVisible(false)
         nav_menu.findItem(R.id.navigation_home).setVisible(false)
         nav_menu.findItem(R.id.navigation_list).setVisible(false)
         nav_menu.findItem(R.id.navigation_users).setVisible(false)
+
+        recyclerView = view.findViewById(R.id.recycler)
+        imageModelArrayList =  ArrayList<FruitModel>()
+
+
+
+
+
+
 
         if (menu.isEmpty()){
             Log.i("Empty","True")
@@ -127,6 +138,7 @@ class HomeFragment : Fragment() {
             override fun onDataChange(p0: DataSnapshot) {
                 //Saves usernames in menu list
                // reload()
+                var fruitmodel = FruitModel()
                 p0.children.mapNotNullTo(menu) {
                     it.child("Username").value
                 }
@@ -135,11 +147,15 @@ class HomeFragment : Fragment() {
                     it.child("Email").value
                 }
                 if(p0.exists()){
-                    userno.text = p0.childrenCount.toString()
+                    fruitmodel.name =  p0.childrenCount.toString()
+
+
                 }
                 else {
-                    userno.text = "NA"
+                    fruitmodel.name =  "NA"
                 }
+                fruitmodel.image_drawable = R.drawable.users4
+                imageModelArrayList.add(fruitmodel)
             }
         })
         databaseReference.child("Transactions").addListenerForSingleValueEvent(object :
@@ -148,7 +164,8 @@ class HomeFragment : Fragment() {
             }
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onDataChange(p0: DataSnapshot) {
-               // reload()
+                var fruitmodel2 = FruitModel()
+                // reload()
                 p0.children.mapNotNullTo(costs) {
                     it.child("value").value
                 }
@@ -162,13 +179,15 @@ class HomeFragment : Fragment() {
                     it.child("date").value
                 }
                 if(p0.exists()){
-                    downloadno.text = p0.childrenCount.toString()
+                    fruitmodel2.name = p0.childrenCount.toString()
+
                 }
                 else {
-                    downloadno.text = "NA"
                 }
-
+                fruitmodel2.image_drawable = R.drawable.downloading2
+                imageModelArrayList.add(fruitmodel2)
                 // Calculation of total cost
+                var fruitmodel3 = FruitModel()
                 count = menu.indexOfFirst { true }
                 last  = menu.indexOfLast { true }
                 while (count <= last){
@@ -186,9 +205,19 @@ class HomeFragment : Fragment() {
                     cost = 0
                     count += 1
                 }
-                revenueno.text = Total_revenue.toString()
+
+                fruitmodel3.name = Total_revenue.toString()
+                fruitmodel3.image_drawable = R.drawable.rupees2
+                imageModelArrayList.add(fruitmodel3)
 
 
+                adapter = HotizontalAdapter(view.context, imageModelArrayList)
+                recyclerView.adapter = adapter
+                recyclerView.layoutManager = LinearLayoutManager(
+                    view.context,
+                    LinearLayoutManager.HORIZONTAL,
+                    false
+                )
                 //Sorting lists associated with transactions according to dates
                 val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
