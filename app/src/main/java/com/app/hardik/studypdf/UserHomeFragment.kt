@@ -106,6 +106,7 @@ class UserHomeFragment : Fragment() {
             reload()
             pullToRefresh.isRefreshing = false
         }
+
         // Inflate the layout for this fragment
         return view
     }

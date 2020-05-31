@@ -156,6 +156,7 @@ class MyPdfFragment : Fragment() {
             val intent = Intent (activity,Pdfviewer::class.java)
             intent.putExtra("path",path)
             startActivity(intent)
+            return
         }
         if (!rootPath.exists()) {
             rootPath.mkdirs()
