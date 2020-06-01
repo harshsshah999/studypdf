@@ -3,12 +3,14 @@ package com.app.hardik.studypdf
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,6 +25,9 @@ private const val ARG_PARAM2 = "param2"
 class SettingFragment : Fragment() {
 
     lateinit var logout : Button
+    lateinit var block : Button
+    lateinit var delete : Button
+
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -42,7 +47,12 @@ class SettingFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view: View = inflater!!.inflate(R.layout.fragment_setting, container, false)
+
         logout = view.findViewById(R.id.logoutadmin)
+        block = view.findViewById(R.id.block)
+        delete = view.findViewById(R.id.delete)
+
+
         logout.setOnClickListener {
             activity!!.getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
                 .putBoolean("isLoggedin", false).apply()
@@ -52,6 +62,14 @@ class SettingFragment : Fragment() {
             startActivity(Intent(view.context,LoginPage::class.java))
         }
 
+        block.setOnClickListener {
+            val intent = Intent(view.context,Adminsettings::class.java)
+            startActivity(intent)
+        }
+        delete.setOnClickListener {
+            val intent = Intent(view.context,Deletepdf::class.java)
+            startActivity(intent)
+        }
 
         return view
     }

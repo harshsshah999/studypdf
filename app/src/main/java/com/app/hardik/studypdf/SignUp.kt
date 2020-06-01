@@ -105,14 +105,17 @@ class SignUp : AppCompatActivity() {
             if(flag == 1){
                 databaseRef.child("Users").child("Students").child(user.uid).child("Username").setValue(name)
                 databaseRef.child("Users").child("Students").child(user.uid).child("UserID").setValue(flag)
+                databaseRef.child("Users").child("Students").child(user.uid).child("Email").setValue(email)
                 databaseRef.child("Auth").child("AllUsers").child(user.uid).child("Username").setValue(name)
                 databaseRef.child("Auth").child("AllUsers").child(user.uid).child("UserID").setValue(flag)
+
                 startActivity(Intent(this,userdashboard::class.java))
                 finish()
             }
         else if(flag == 2) {
                 databaseRef.child("Users").child("Admin").child(user.uid).child("Username").setValue(name)
                 databaseRef.child("Users").child("Admin").child(user.uid).child("UserID").setValue(flag)
+                databaseRef.child("Users").child("Admin").child(user.uid).child("Email").setValue(email)
                 databaseRef.child("Auth").child("AllUsers").child(user.uid).child("Username").setValue(name)
                 databaseRef.child("Auth").child("AllUsers").child(user.uid).child("UserID").setValue(flag)
                 startActivity(Intent(this,Admindashboard::class.java))

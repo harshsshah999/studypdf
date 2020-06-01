@@ -1,7 +1,10 @@
 package com.app.hardik.studypdf
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -13,6 +16,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -33,6 +38,24 @@ class LoginPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_page)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            /*val intent = Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.parse("package:$packageName")
+            )
+            startActivity(intent)*/
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                1
+            )
+
+        }
 
 
         // Initialize Firebase Auth
@@ -169,7 +192,32 @@ class LoginPage : AppCompatActivity() {
         }
     }
 
-
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1) {
+            if (grantResults.count() > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED
+            ) {
+                Toast.makeText(
+                    this,
+                    "Storage Permission Granted",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Storage Permission Denied",
+                    Toast.LENGTH_SHORT
+                )
+                    .show();
+            }
+        }
+    }
 
 
 

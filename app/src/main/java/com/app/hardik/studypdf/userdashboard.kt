@@ -1,19 +1,27 @@
 package com.app.hardik.studypdf
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import kotlin.random.Random
 
 class userdashboard : AppCompatActivity() {
     lateinit var database: FirebaseDatabase
@@ -28,6 +36,7 @@ class userdashboard : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_userdashboard)
+
         helloname = findViewById(R.id.welcome)
         database = FirebaseDatabase.getInstance()
         databaseReference = database.getReference()
@@ -46,9 +55,10 @@ class userdashboard : AppCompatActivity() {
         bottomNavigation = findViewById(R.id.bottom_navigation)
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener)
         helloname.visibility = View.GONE
-        openFragment(UserHomeFragment.newInstance("", ""));
+        openFragment(UserHomeFragment.newInstance("", ""))
 
     }
+
     fun openFragment(fragment: Fragment) {
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container, fragment)
@@ -79,4 +89,24 @@ class userdashboard : AppCompatActivity() {
                 return false
             }
         }
+
+    //Code for informing and closing app
+    private var exit = false
+    override fun onBackPressed() {
+        if (exit) {
+            finish() // finish activity
+        } else {
+            bottomNavigation.checkItem(R.id.navigation_userhome)
+            openFragment(UserHomeFragment.newInstance("",""))
+            Toast.makeText(
+                this, "Press Back again to Exit.",
+                Toast.LENGTH_SHORT
+            ).show()
+            exit = true
+            Handler().postDelayed(Runnable { exit = false }, 3 * 1000)
+        }
+    }
+    internal fun BottomNavigationView.checkItem(actionId: Int) {
+        menu.findItem(actionId)?.isChecked = true
+    }
 }

@@ -1,10 +1,22 @@
 package com.app.hardik.studypdf
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import com.multilevelview.MultiLevelRecyclerView
+import com.multilevelview.models.RecyclerViewItem
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,6 +32,12 @@ class UserHomeFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    lateinit var dbrefer: DatabaseReference
+    lateinit var db: FirebaseDatabase
+    lateinit var auth: FirebaseAuth
+    lateinit var myAdapter: UserAdapter
+    lateinit var StreamList: MutableList<Item>
+    lateinit var welcome: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,10 +51,114 @@ class UserHomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_home, container, false)
-    }
+        val view = inflater.inflate(R.layout.fragment_user_home, container, false)
+        welcome = view.findViewById(R.id.welcometext)
+        auth = FirebaseAuth.getInstance()
+        db= FirebaseDatabase.getInstance()
+        dbrefer=db.getReference()
+        val user = auth.currentUser
+        dbrefer.child("Auth").child("AllUsers").child(user!!.uid).child("Username").addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
 
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                welcome.text = "Welcome "+p0.value.toString()+" !"
+            }
+
+        })
+
+        val multiLevelRecyclerView =
+            view.findViewById(R.id.rv_list) as MultiLevelRecyclerView
+        multiLevelRecyclerView.layoutManager = LinearLayoutManager(this.context)
+        //Default Element to include
+        StreamList = ArrayList<RecyclerViewItem>() as MutableList<Item>
+        var item = Item(0)
+        item.setText("All Available list of Notes!")
+        StreamList.add(item)
+
+        readlist()
+        myAdapter = UserAdapter(view.context, StreamList, multiLevelRecyclerView)
+        multiLevelRecyclerView.adapter = myAdapter
+
+        multiLevelRecyclerView.setOnItemClick { view, item, position ->
+            if(StreamList.get(position).level == 3){
+                val name = StreamList.get(position).text
+                dbrefer.child("SubjectPath").child(StreamList.get(position).text).addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onCancelled(p0: DatabaseError) {
+
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        val path = p0.value.toString()
+                        val intent = Intent(view.context,Pdflist::class.java)
+                        intent.putExtra("path",path)
+                        intent.putExtra("name",name)
+                        startActivity(intent)
+                    }
+
+                })
+            }
+
+        }
+        val pullToRefresh: SwipeRefreshLayout = view.findViewById(R.id.pullToRefresh)
+        pullToRefresh.setOnRefreshListener {
+            reload()
+            pullToRefresh.isRefreshing = false
+        }
+
+        // Inflate the layout for this fragment
+        return view
+    }
+    fun readlist(){
+        dbrefer.child("StreamList").addChildEventListener(object : ChildEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                Toast.makeText(context,p0.toString(), Toast.LENGTH_LONG).show()
+            }
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {}
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {}
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val DeptList = ArrayList<RecyclerViewItem>() as MutableList<Item>
+                val stream = Item(0)
+                stream.setText(p0.key.toString())
+                StreamList.add(stream)
+                for (i in p0.children) {
+                    val dept = Item(1)
+                    dept.setText(i.key.toString())
+                    DeptList.add(dept)
+                    stream.addChildren(DeptList as MutableList<RecyclerViewItem>)
+                    val Semlist = ArrayList<RecyclerViewItem>() as MutableList<Item>
+                    for (j in i.children) {
+                        val sem = Item(2)
+                        sem.setText(j.key.toString())
+                        Semlist.add(sem)
+                        dept.addChildren(Semlist as MutableList<RecyclerViewItem>)
+                        val Sublist = ArrayList<RecyclerViewItem>() as MutableList<Item>
+                        for (k in j.children){
+                            val sub = Item(3)
+                            sub.setText(k.key.toString())
+                            Sublist.add(sub)
+                            sem.addChildren(Sublist as MutableList<RecyclerViewItem>)
+                        }
+                    }
+                }
+                myAdapter.notifyDataSetChanged()
+
+            }
+            override fun onChildRemoved(p0: DataSnapshot) {
+                reload()
+            }
+        })
+    }
+    fun reload () {
+        val ft: FragmentTransaction = fragmentManager!!.beginTransaction()
+        if (Build.VERSION.SDK_INT >= 26) {
+            ft.setReorderingAllowed(false)
+        }
+        ft.detach(this).attach(this).commit()
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
