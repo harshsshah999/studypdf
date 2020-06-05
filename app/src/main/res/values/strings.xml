@@ -16,6 +16,6 @@
     <string name="user_dashboard">User Dashboard</string>
     <string name="todo">TODO</string>
 
-    <string name="newuser"><u>"Don't have an account ? \n Register"</u></string>
-    <string name="olduser"><u>"Already have an account? \n Login"</u></string>
+    <string name="newuser"><u>"Don't have an account? \n<b>Register"</b></u></string>
+    <string name="olduser"><u>"Already have an account? \n<b>Login"</b></u></string>
 </resources>

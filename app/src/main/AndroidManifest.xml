@@ -16,7 +16,8 @@
         android:roundIcon="@drawable/finalappicon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Deletepdf"></activity>
+        <activity android:name=".ForgotPWD"></activity>
+        <activity android:name=".Deletepdf" />
         <activity android:name=".Adminsettings" />
         <activity android:name=".Demopdfviewer" />
         <activity android:name=".Pdfviewer" />

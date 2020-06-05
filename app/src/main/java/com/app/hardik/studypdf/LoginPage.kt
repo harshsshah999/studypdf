@@ -25,6 +25,7 @@ import com.google.firebase.database.*
 class LoginPage : AppCompatActivity() {
     lateinit var loginbtn : Button
     lateinit var newusrbtn : Button
+    lateinit var forgotbtn: Button
     lateinit var emailtext : EditText
     lateinit var passwordtext : EditText
     lateinit var email: String
@@ -64,6 +65,7 @@ class LoginPage : AppCompatActivity() {
         //Variables
         loginbtn = findViewById(R.id.login)
         newusrbtn = findViewById(R.id.newuser)
+        forgotbtn = findViewById(R.id.forgotpwd)
         emailtext = findViewById(R.id.email)
         passwordtext = findViewById(R.id.password)
         database = FirebaseDatabase.getInstance()
@@ -71,6 +73,11 @@ class LoginPage : AppCompatActivity() {
 
         //spinner
         spinner = findViewById<ProgressBar>(R.id.progressBar1)
+
+        //On clicklistener for Forgot Button
+        forgotbtn.setOnClickListener {
+            startActivity(Intent(this@LoginPage,ForgotPWD::class.java))
+        }
 
         // Code for Enter key
              passwordtext.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
@@ -93,6 +100,9 @@ class LoginPage : AppCompatActivity() {
         }
         //Sign up Intent Fun
     }
+
+
+
     fun loginAccount (email:String,password:String) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
