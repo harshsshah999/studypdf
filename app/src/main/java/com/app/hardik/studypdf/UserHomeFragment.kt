@@ -18,6 +18,9 @@ import com.google.firebase.database.*
 import com.multilevelview.MultiLevelRecyclerView
 import com.multilevelview.models.RecyclerViewItem
 
+lateinit var device_count:String
+
+
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -57,13 +60,16 @@ class UserHomeFragment : Fragment() {
         db= FirebaseDatabase.getInstance()
         dbrefer=db.getReference()
         val user = auth.currentUser
-        dbrefer.child("Auth").child("AllUsers").child(user!!.uid).child("Username").addListenerForSingleValueEvent(object: ValueEventListener{
+        dbrefer.child("Auth").child("AllUsers").child(user!!.uid).addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
 
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                welcome.text = "Welcome "+p0.value.toString()+" !"
+                welcome.text = "Welcome "+p0.child("Username").value.toString()+" !"
+
+                //Declaration of device count
+                device_count = p0.child("LoggedInDevice").value.toString()
             }
 
         })
