@@ -3,20 +3,15 @@ package com.app.hardik.studypdf
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
+import android.net.NetworkInfo
 import android.os.Bundle
-import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -97,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE).edit()
-                    .putBoolean("isFirstRun", false).commit()
+                    .putBoolean("isFirstRun", false).apply()
 
             }
             override fun onAnimationRepeat(animation: Animation) {
@@ -111,7 +106,7 @@ class MainActivity : AppCompatActivity() {
 
 }
 fun isOnline(context: Context): Boolean {
-    val connectivityManager =
+    /*val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     if (connectivityManager != null) {
         val capabilities =
@@ -126,6 +121,19 @@ fun isOnline(context: Context): Boolean {
             } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
                 Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
                 return true
+            }
+        }
+    }
+    return false*/
+    val connectivity =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    if(connectivity!=null){
+    val info = connectivity.allNetworkInfo
+        if(info!=null){
+            for(i in 0..info.size - 1){
+                if(info[i].state == NetworkInfo.State.CONNECTED){
+                    return true
+                }
             }
         }
     }

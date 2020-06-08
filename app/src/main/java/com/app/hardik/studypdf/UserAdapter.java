@@ -1,10 +1,6 @@
 package com.app.hardik.studypdf;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,12 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.multilevelview.MultiLevelAdapter;
 import com.multilevelview.MultiLevelRecyclerView;
 import java.util.ArrayList;
@@ -46,7 +38,7 @@ public class UserAdapter extends MultiLevelAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.row_layout, parent, false));
+        return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false));
     }
 
     @Override
@@ -58,17 +50,17 @@ public class UserAdapter extends MultiLevelAdapter {
             case 1:
                 holder.itemView.setBackgroundResource(R.drawable.customshape2);
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
-                params.leftMargin = 100; params.rightMargin = 100;
+              //  params.leftMargin = 100; params.rightMargin = 100;
                 break;
             case 2:
                 holder.itemView.setBackgroundResource(R.drawable.customshape3);
                 ViewGroup.MarginLayoutParams params2 = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
-                params2.leftMargin = 130; params2.rightMargin = 130;
+             //   params2.leftMargin = 130; params2.rightMargin = 130;
                 break;
             case 3:
                 holder.itemView.setBackgroundResource(R.drawable.customshape4);
                 ViewGroup.MarginLayoutParams params3 = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
-                params3.leftMargin = 165; params3.rightMargin = 165;
+              //  params3.leftMargin = 165; params3.rightMargin = 165;
                 break;
             default:
                 holder.itemView.setBackgroundResource(R.drawable.customshape);

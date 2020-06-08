@@ -7,11 +7,11 @@
         android:endColor="#a1c4fd"
         android:angle="270"/>
 
-    <corners
+    <!--corners
         android:bottomRightRadius="36dp"
         android:bottomLeftRadius="36dp"
         android:topLeftRadius="36dp"
-        android:topRightRadius="36dp"/>
+        android:topRightRadius="36dp"/-->
 
 
 </shape>
