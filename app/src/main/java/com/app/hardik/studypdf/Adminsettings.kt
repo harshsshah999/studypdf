@@ -1,5 +1,6 @@
 package com.app.hardik.studypdf
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -67,10 +68,12 @@ class Adminsettings : AppCompatActivity() {
                             if (p0.hasChild(uid)){
                                 databaseReference.child("blockedUsers").child(uid).setValue(null)
                                 Toast.makeText(this@Adminsettings,"User is Successfully Unblocked",Toast.LENGTH_LONG).show()
+                                view!!.setBackgroundColor(Color.WHITE)
                             }
                             else{
                                 databaseReference.child("blockedUsers").child(uid).setValue(true)
                                 Toast.makeText(this@Adminsettings,"User is Successfully Blocked",Toast.LENGTH_LONG).show()
+                                view!!.setBackgroundColor(Color.RED)
 
                             }
                         }

@@ -98,7 +98,12 @@ class MyPdfFragment : Fragment() {
         progressDialog.setTitle("Loading PDF...")
         progressDialog.setCanceledOnTouchOutside(false)
         var pdflistsave = activity!!.getSharedPreferences("pdflist",Context.MODE_PRIVATE).getStringSet("pdflistsave",null)
-        Log.i("sharedpref",pdflistsave.toString())
+//        Log.i("sharedpref",pdflistsave.toString())
+        if (pdflistsave.isNullOrEmpty()){
+            val mutableSet : MutableSet<String> = mutableSetOf()
+            mutableSet.add("NO PDFS FOUND")
+            pdflistsave = mutableSet
+        }
         pdflistshared  = pdflistsave.toMutableList()
         dbrefer.child("Users").child("Students").child(user!!.uid).addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
