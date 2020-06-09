@@ -7,17 +7,29 @@
     android:layout_height="match_parent"
     tools:context=".SignUp">
 
+    <ImageView
+        android:id="@+id/imageView10"
+        android:layout_width="35dp"
+        android:layout_height="34dp"
+        app:layout_constraintBottom_toBottomOf="@+id/phoneno"
+        app:layout_constraintEnd_toStartOf="@+id/phoneno"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView8"
+        app:layout_constraintVertical_bias="0.657"
+        app:srcCompat="@drawable/phone" />
+
     <EditText
         android:id="@+id/phoneno"
         android:layout_width="298dp"
         android:layout_height="59dp"
-        android:layout_marginTop="1dp"
         android:ems="10"
         android:hint="Phone No"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.48"
-        app:layout_constraintStart_toEndOf="@+id/imageView8"
+        app:layout_constraintStart_toEndOf="@+id/imageView10"
+        app:layout_constraintBottom_toTopOf="@+id/signupstd"
         app:layout_constraintTop_toBottomOf="@+id/confpassword" />
 
     <ImageView
@@ -72,13 +84,13 @@
         android:onClick="Signupstd"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:text="SignUp as Student"
+        android:text="SignUp"
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toTopOf="@+id/olduser"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/confpassword" />
+        app:layout_constraintTop_toBottomOf="@+id/phoneno" />
 
     <EditText
         android:id="@+id/fullname"
@@ -100,7 +112,7 @@
         android:ems="10"
         android:hint="Confirm Password"
         android:inputType="textPassword"
-        app:layout_constraintBottom_toTopOf="@+id/signupstd"
+        app:layout_constraintBottom_toTopOf="@+id/phoneno"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imageView8"
@@ -185,6 +197,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView7"
-        app:layout_constraintVertical_bias="0.903"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/cnfmpass" />
 </androidx.constraintlayout.widget.ConstraintLayout>
