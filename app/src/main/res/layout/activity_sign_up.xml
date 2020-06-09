@@ -7,6 +7,20 @@
     android:layout_height="match_parent"
     tools:context=".SignUp">
 
+    <EditText
+        android:id="@+id/phoneno"
+        android:layout_width="298dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="1dp"
+        android:ems="10"
+        android:hint="Phone No"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/signupadm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.48"
+        app:layout_constraintStart_toEndOf="@+id/imageView8"
+        app:layout_constraintTop_toBottomOf="@+id/confpassword" />
+
     <ImageView
         android:id="@+id/imageView7"
         android:layout_width="39dp"
