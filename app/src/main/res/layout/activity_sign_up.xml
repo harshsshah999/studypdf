@@ -15,7 +15,6 @@
         android:ems="10"
         android:hint="Phone No"
         android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/signupadm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toEndOf="@+id/imageView8"
@@ -48,23 +47,6 @@
         app:layout_constraintVertical_bias="0.217"
         app:srcCompat="@drawable/email" />
 
-    <Button
-        android:id="@+id/signupadm"
-        style="@android:style/Widget.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/my_bg_btn"
-        android:onClick="Signupadm"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:text=" SignUp as Admin"
-        android:textColor="@color/colorPrimaryDark"
-        app:layout_constraintBottom_toTopOf="@+id/olduser"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/signupstd"
-        app:layout_constraintTop_toBottomOf="@+id/confpassword" />
-
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
@@ -93,8 +75,8 @@
         android:text="SignUp as Student"
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toTopOf="@+id/olduser"
-        app:layout_constraintEnd_toStartOf="@+id/signupadm"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/confpassword" />
 
@@ -118,7 +100,7 @@
         android:ems="10"
         android:hint="Confirm Password"
         android:inputType="textPassword"
-        app:layout_constraintBottom_toTopOf="@+id/signupadm"
+        app:layout_constraintBottom_toTopOf="@+id/signupstd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imageView8"
@@ -166,7 +148,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signupadm" />
+        app:layout_constraintTop_toBottomOf="@+id/signupstd" />
 
     <ProgressBar
         android:id="@+id/progressBar1"
