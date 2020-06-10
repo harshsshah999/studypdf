@@ -61,7 +61,7 @@ public class MyAdapter extends MultiLevelAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false));
+        return new Holder(LayoutInflater.from(parent.getContext()).inflate(R.layout.row_layout, parent, false));
     }
 
     @Override

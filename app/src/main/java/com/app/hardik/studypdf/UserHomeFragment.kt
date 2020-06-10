@@ -145,8 +145,28 @@ class UserHomeFragment : Fragment() {
                         for (k in j.children){
                             val sub = Item(3)
                             sub.setText(k.key.toString())
+                            val path = "StreamList/"+p0.key.toString()+"/"+i.key.toString()+"/"+j.key.toString()+"/"+k.key.toString()
+                            Log.i("path0",path)
+                            dbrefer.child("Uploads").child(path).addListenerForSingleValueEvent(object : ValueEventListener{
+                                override fun onCancelled(p0: DatabaseError) {
+
+                                }
+
+                                override fun onDataChange(p0: DataSnapshot) {
+                                    Log.i("path0 p0",path+p0.toString())
+                                    if (p0.hasChildren()){
+                                        sub.setSecondText(p0.childrenCount.toString()+" Pdfs Available")
+                                    }
+                                    else {
+                                        sub.setSecondText("No Pdf Available")
+                                    }
+                                }
+
+                            })
                             Sublist.add(sub)
+                            //Log.i("path0 $path","StreamList/"+i.key.toString()+"/"+j.key.toString()+"/"+k.key.toString())
                             sem.addChildren(Sublist as MutableList<RecyclerViewItem>)
+
                         }
                     }
                 }

@@ -68,6 +68,9 @@ public class UserAdapter extends MultiLevelAdapter {
         }
         mViewHolder.mTitle.setText(mItem.getText());
         mViewHolder.mTitle.setGravity(Gravity.CENTER_VERTICAL);
+        if (mItem.getLevel() == 3){
+            mViewHolder.mSubtitle.setText(mItem.getSecondText());
+        }
 //        mViewHolder.mSubtitle.setText(mItem.getSecondText());
 
         if (mItem.hasChildren() && mItem.getChildren().size() > 0) {
@@ -84,6 +87,8 @@ public class UserAdapter extends MultiLevelAdapter {
         // e.g. in populateFakeData(); the very first Item shold be instantiate like this: Item item = new Item(0);
         float density = mContext.getResources().getDisplayMetrics().density;
         ((ViewGroup.MarginLayoutParams) mViewHolder.mTextBox.getLayoutParams()).leftMargin = (int) ((getItemViewType(position) * 20) * density + 0.5f);
+
+
     }
 
     private class Holder extends RecyclerView.ViewHolder {
