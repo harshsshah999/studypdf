@@ -15,7 +15,6 @@ import com.multilevelview.MultiLevelAdapter;
 import com.multilevelview.MultiLevelRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class UserAdapter extends MultiLevelAdapter {
     private Holder mViewHolder;
@@ -32,8 +31,9 @@ public class UserAdapter extends MultiLevelAdapter {
     }
 
     private void setExpandButton(ImageView expandButton, boolean isExpanded) {
-        // set the icon based on the current state
-        //expandButton.setImageResource(isExpanded ? R.drawable.ic_keyboard_arrow_down_black_24dp : R.drawable.ic_keyboard_arrow_up_black_24dp);
+      /* this statement doesnt work , so i have already implemented different logic let it be in comments
+       expandButton.setImageResource(isExpanded ? R.drawable.ic_keyboard_arrow_down_black_24dp : R.drawable.ic_keyboard_arrow_up_black_24dp);
+       */
     }
 
     @Override
@@ -49,17 +49,17 @@ public class UserAdapter extends MultiLevelAdapter {
         switch (getItemViewType(position)) {
             case 1:
                 holder.itemView.setBackgroundResource(R.drawable.customshape2);
-                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
+               // ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
               //  params.leftMargin = 100; params.rightMargin = 100;
                 break;
             case 2:
                 holder.itemView.setBackgroundResource(R.drawable.customshape3);
-                ViewGroup.MarginLayoutParams params2 = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
+             //   ViewGroup.MarginLayoutParams params2 = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
              //   params2.leftMargin = 130; params2.rightMargin = 130;
                 break;
             case 3:
                 holder.itemView.setBackgroundResource(R.drawable.customshape4);
-                ViewGroup.MarginLayoutParams params3 = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
+              //  ViewGroup.MarginLayoutParams params3 = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
               //  params3.leftMargin = 165; params3.rightMargin = 165;
                 break;
             default:
@@ -68,10 +68,10 @@ public class UserAdapter extends MultiLevelAdapter {
         }
         mViewHolder.mTitle.setText(mItem.getText());
         mViewHolder.mTitle.setGravity(Gravity.CENTER_VERTICAL);
-        if (mItem.getLevel() == 3){
+        if (mItem.getText().substring(0,2).equals("->")){
             mViewHolder.mSubtitle.setText(mItem.getSecondText());
         }
-//        mViewHolder.mSubtitle.setText(mItem.getSecondText());
+//       mViewHolder.mSubtitle.setText(mItem.getSecondText());
 
         if (mItem.hasChildren() && mItem.getChildren().size() > 0) {
             setExpandButton(mViewHolder.mExpandIcon, mItem.isExpanded());

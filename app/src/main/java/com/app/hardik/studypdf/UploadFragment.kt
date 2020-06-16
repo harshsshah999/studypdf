@@ -28,6 +28,11 @@ import kotlinx.android.synthetic.main.fragment_upload.view.*
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
+/* Everything Related to MultiRecyclerview (Comments stuff) can be found in ListFragment.kt file
+as the code related to it is exactly same
+* */
+
+//Global function to be used in both UploadFragment and UploadAdapter
 object activate {
     var isClickable : Int = 1
     var title : String = ""
@@ -46,7 +51,7 @@ class UploadFragment : Fragment() {
     lateinit var db: FirebaseDatabase
     lateinit var auth: FirebaseAuth
     lateinit var myAdapter: UploadAdapter
-    lateinit var StreamList: MutableList<Item>
+    lateinit var Level0list: MutableList<Item>
     lateinit var gotoupload: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,16 +72,18 @@ class UploadFragment : Fragment() {
                 view.findViewById(R.id.rv_list) as MultiLevelRecyclerView
         multiLevelRecyclerView.layoutManager = LinearLayoutManager(this.context)
         //Default Element to include
-        StreamList = ArrayList<RecyclerViewItem>() as MutableList<Item>
+        Level0list = ArrayList<RecyclerViewItem>() as MutableList<Item>
         gotoupload = view.findViewById<Button>(R.id.gotoupload);
+
         var item = Item(0)
+        //default
         if(activate.isClickable == 1) {
             item.setText("Choose Category of File!")
             item.setSecondText("Long Click on Subject to Select it. (You can Only Select Subject!)")
             view.gotoupload.setActivated(false)
             gotoupload.setEnabled(false)
-
         }
+        //if any subject is selected
         else if (activate.isClickable == 0){
             item.setText("You have Selected "+activate.title+" .")
             item.setSecondText("Long Click Here to Cancel and select other subject")
@@ -85,11 +92,11 @@ class UploadFragment : Fragment() {
             gotoupload.setBackgroundResource(R.drawable.my_bg_btn)
             gotoupload.setTextColor(Color.rgb(255,160,0))
         }
-        StreamList.add(item)
+        Level0list.add(item)
         db= FirebaseDatabase.getInstance()
         dbrefer=db.getReference()
         readlist()
-        myAdapter = UploadAdapter(view.context, StreamList, multiLevelRecyclerView,UploadFragment())
+        myAdapter = UploadAdapter(view.context, Level0list, multiLevelRecyclerView,UploadFragment())
         multiLevelRecyclerView.adapter = myAdapter
         val pullToRefresh: SwipeRefreshLayout = view.findViewById(R.id.pullToRefresh)
         pullToRefresh.setOnRefreshListener {
@@ -101,6 +108,7 @@ class UploadFragment : Fragment() {
         }
         view.gotoupload.setOnClickListener{
             if(view.gotoupload.isActivated) {
+                //sending intent of selected node name and its database path
                 val intent = Intent(getActivity(), Uploadsection::class.java)
                 intent.putExtra("name",activate.title)
                 intent.putExtra("path",activate.currentpath)
@@ -142,30 +150,9 @@ class UploadFragment : Fragment() {
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {}
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val DeptList = ArrayList<RecyclerViewItem>() as MutableList<Item>
-                val stream = Item(0)
-                stream.setText(p0.key.toString())
-                StreamList.add(stream)
-                for (i in p0.children) {
-                    val dept = Item(1)
-                    dept.setText(i.key.toString())
-                    DeptList.add(dept)
-                    stream.addChildren(DeptList as MutableList<RecyclerViewItem>)
-                    val Semlist = ArrayList<RecyclerViewItem>() as MutableList<Item>
-                    for (j in i.children) {
-                        val sem = Item(2)
-                        sem.setText(j.key.toString())
-                        Semlist.add(sem)
-                        dept.addChildren(Semlist as MutableList<RecyclerViewItem>)
-                        val Sublist = ArrayList<RecyclerViewItem>() as MutableList<Item>
-                        for (k in j.children){
-                            val sub = Item(3)
-                            sub.setText(k.key.toString())
-                            Sublist.add(sub)
-                            sem.addChildren(Sublist as MutableList<RecyclerViewItem>)
-                        }
-                    }
-                }
+                val demolist = ArrayList<RecyclerViewItem>()
+                val demoitem = Item(0)
+                listreader(demoitem,demolist,p0,0)
                 myAdapter.notifyDataSetChanged()
 
             }
@@ -173,6 +160,33 @@ class UploadFragment : Fragment() {
                 reload()
             }
         })
+    }
+    fun listreader (parent:Item,parentlist:ArrayList<RecyclerViewItem>,p0:DataSnapshot,lvl:Int) {
+        val parentlist = parentlist as MutableList<Item>
+        var lvl = lvl
+        if (!(p0.hasChildren())){
+            Log.i("Leaf node", p0.key.toString()+" at level $lvl")
+            parent.setSecondText("__")
+        }
+        else if(lvl == 0){
+            val Level1list = ArrayList<RecyclerViewItem>() //as MutableList<Item>
+            val lvl0 = Item(lvl)
+            lvl0.setText(p0.key.toString())
+            Level0list.add(lvl0)
+            var newlevel = lvl + 1
+            listreader(lvl0,Level1list,p0,newlevel)
+        }
+        else {
+            for (i in p0.children){
+                val item = Item(lvl)
+                item.setText(i.key.toString())
+                parentlist.add(item)
+                parent.addChildren(parentlist as MutableList<RecyclerViewItem>)
+                val futurelist = ArrayList<RecyclerViewItem>()
+                var newlevel = lvl + 1
+                listreader(item,futurelist,i,newlevel)
+            }
+        }
     }
     fun reload () {
         val ft: FragmentTransaction = fragmentManager!!.beginTransaction()

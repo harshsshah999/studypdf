@@ -1,10 +1,8 @@
 package com.app.hardik.studypdf;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,15 +13,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 import com.multilevelview.MultiLevelAdapter;
 import com.multilevelview.MultiLevelRecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+
+
+//Missing comments can be found in MyAdapter.java file for common code
 
 public class UploadAdapter extends MultiLevelAdapter {
 
@@ -45,8 +44,11 @@ public class UploadAdapter extends MultiLevelAdapter {
     }
 
     private void setExpandButton(ImageView expandButton, boolean isExpanded) {
+        /* this statement doesnt work , so i have already implemented different logic let it be in comments
+       expandButton.setImageResource(isExpanded ? R.drawable.ic_keyboard_arrow_down_black_24dp : R.drawable.ic_keyboard_arrow_up_black_24dp);
+       */
         // set the icon based on the current state
-        expandButton.setImageResource(isExpanded ? R.drawable.ic_keyboard_arrow_down_black_24dp : R.drawable.ic_keyboard_arrow_up_black_24dp);
+        //expandButton.setImageResource(isExpanded ? R.drawable.ic_keyboard_arrow_down_black_24dp : R.drawable.ic_keyboard_arrow_up_black_24dp);
     }
 
     @Override
@@ -117,9 +119,7 @@ public class UploadAdapter extends MultiLevelAdapter {
                     if (activate.INSTANCE.isClickable() == 0){
                         return;
                     }
-
-
-
+                    mExpandIcon.animate().rotation(mListItems.get(getAdapterPosition()).isExpanded() ? 0 : -180).start();
                     //set click event on item here
                     //Toast.makeText(mContext, String.format(Locale.ENGLISH, "Item at position %d was clicked!", getAdapterPosition()), Toast.LENGTH_SHORT).show();
                 }
@@ -148,6 +148,7 @@ public class UploadAdapter extends MultiLevelAdapter {
                                    mListItems.get(0).setSecondText("Long Click on Subject to Select it. (You can Only Select Subject!)");
                                    Toast.makeText(v.getRootView().getContext(), "Given subject is Deselected. Choose new subject", Toast.LENGTH_LONG).show();
                                    activate.INSTANCE.setClickable(1);
+                                   //auto refresh page after selecting node
                                    v.getRootView().findViewById(R.id.refresh).callOnClick();
                                }
                            });
@@ -162,42 +163,33 @@ public class UploadAdapter extends MultiLevelAdapter {
                         }
                         return false;
                     }
-                    String path = "",parent2Name,parent1Name,parent0Name = "";
-                    Integer parent2,parent1,parent0 = 0;
+                    String path = "",parentname = "";
+                    Integer parent = 0;
                     final ListFragment listFragment = new ListFragment();
-                    if (level == 3) {
 
-                        parent2 = parentgive(level, 1);
-                        parent2Name = mListItems.get(getAdapterPosition() - parent2).text;
-                        parent1 = parentgive(2, parent2);
-                        parent1Name = mListItems.get(getAdapterPosition() - parent1).text;
-                        parent0 = parentgive(1, parent1);
-                        parent0Name = mListItems.get(getAdapterPosition() - parent0).text;
-                        path = "StreamList/" + parent0Name + "/" + parent1Name + "/" + parent2Name + "/" + currentName;
-
-                    } else if (level == 2) {
-                        parent1 = parentgive(level, 1);
-                        parent1Name = mListItems.get(getAdapterPosition() - parent1).text;
-                        parent0 = parentgive(1, parent1);
-                        parent0Name = mListItems.get(getAdapterPosition() - parent0).text;
-                        path = "StreamList/" + parent0Name + "/" + parent1Name + "/" + currentName;
-                    } else if (level == 1) {
-                        parent0 = parentgive(level, 1);
-                        parent0Name = mListItems.get(getAdapterPosition() - parent0).text;
-                        path = "StreamList/" + parent0Name + "/" + currentName;
-                    } else if (level == 0) {
+                    if (level == 0) {
                         path = "StreamList/" + currentName;
+                    }
+                    else {
+                        for (int i=level ;i>0;i--)
+                        {
+                            parent = parentgive(i,1);
+                            String a = parentname;
+                            String b = mListItems.get(getAdapterPosition() - parent).text;
+                            parentname = b+"/"+a;
+                        }
+                        path = "StreamList/"+parentname+currentName;
+                        Log.i("genpath",path);
                     }
                     final String finalPath = path;
 
-
-
-                    if(mListItems.get(getAdapterPosition()).getLevel() != 3){
-                        Toast.makeText(mContext,"You can select Subject Only",Toast.LENGTH_SHORT).show();
+                    //restrict user to only select leaf nodes
+                    if(!(mListItems.get(getAdapterPosition()).getSecondText().equals("__"))){
+                        Toast.makeText(mContext,"You can select Subject (Last Node) Only",Toast.LENGTH_SHORT).show();
                         return false;
                     }
 
-                    else if(mListItems.get(getAdapterPosition()).getLevel() == 3) {
+                    else if((mListItems.get(getAdapterPosition()).getSecondText().equals("__"))) {
                         alert.setTitle("Upload");
                         alert.setMessage("Your Selected Subject is "+currentName+"\n"+"Full Path :- "+finalPath);
                         alert.setPositiveButton("Choose", new DialogInterface.OnClickListener() {
@@ -210,10 +202,8 @@ public class UploadAdapter extends MultiLevelAdapter {
                                 mListItems.get(0).setText("You have Selected "+currentName+" .");
                                 mListItems.get(0).setSecondText("Long Click Here to Cancel and select other subject");
                                 Toast.makeText(v.getRootView().getContext(), currentName+" is Selected. Click Upload button to Upload!", Toast.LENGTH_LONG).show();
+                                //auto refresh page after selecting node
                                 v.getRootView().findViewById(R.id.refresh).callOnClick();
-                               /* FirebaseDatabase db = FirebaseDatabase.getInstance();
-                                DatabaseReference ref = db.getReference("SubjectPath");
-                                ref.child(mListItems.get(getAdapterPosition()).getText()).setValue(activate.INSTANCE.getCurrentpath()); */
                             }
                         });
                         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -239,7 +229,7 @@ public class UploadAdapter extends MultiLevelAdapter {
                         mMultiLevelRecyclerView.toggleItemsGroup(getAdapterPosition());
                         // rotate the icon based on the current state
                         // but only here because otherwise we'd see the animation on expanded items too while scrolling
-                        mExpandIcon.animate().rotation(mListItems.get(getAdapterPosition()).isExpanded() ? -180 : 0).start();
+                        mExpandIcon.animate().rotation(mListItems.get(getAdapterPosition()).isExpanded() ? 0 : -180).start();
 
                         //Toast.makeText(mContext, String.format(Locale.ENGLISH, "Item at position %d is expanded: %s", getAdapterPosition(), mItem.isExpanded()), Toast.LENGTH_SHORT).show();
 
