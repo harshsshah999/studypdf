@@ -134,7 +134,7 @@ class HomeFragment : Fragment() {
             Log.i("Empty","False")
         }
         //Fetching Details from database to mutable lists
-        var Done :Boolean = false           //Used to know if fetching from dg is over or not
+        var Done :Boolean = false           //Used to know if fetching from db is over or not
         database = FirebaseDatabase.getInstance()
         databaseReference = database.getReference()
         databaseReference.child("Users").child("Students").addListenerForSingleValueEvent(object :

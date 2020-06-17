@@ -86,6 +86,11 @@ class UserProfileFragment : Fragment() {
                 .putBoolean("isLoggedin", false).apply()
             activity!!.getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
                 .putString("Flag","Null").apply()
+
+            //decrease count of device while logout
+            device_count = (device_count.toInt() - 1).toString()
+            databaseReference.child("Auth").child("AllUsers").child(user!!.uid).child("LoggedInDevice").setValue(device_count)
+
             startActivity(Intent(view.context,LoginPage::class.java))
         }
 

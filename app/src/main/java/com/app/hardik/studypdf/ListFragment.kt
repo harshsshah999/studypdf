@@ -1,9 +1,8 @@
 package com.app.hardik.studypdf
 
-import android.app.Activity.RESULT_OK
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.multilevelview.MultiLevelRecyclerView
 import com.multilevelview.models.RecyclerViewItem
 import kotlinx.android.synthetic.main.content_list.view.*
+import org.json.JSONArray
+import org.json.JSONObject
+import java.util.logging.Level
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -30,10 +34,16 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ListFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+/* Apple is a class to detect which mode is On
+    updateClicked == 1 ; ADD Mode is On
+    updateClicked == 2 ; DELETE Mode is On
+    by default its 0. this class is made public so that it can be accessed in MyAdapter.java class which
+    is an adapter for MultiLevelRecyclerList View
+ */
 object Apple {
     var updateClicked : Int = 0
 }
-//Ritesh
+
 class ListFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -42,7 +52,7 @@ class ListFragment : Fragment() {
     lateinit var db: FirebaseDatabase
     lateinit var auth: FirebaseAuth
     lateinit var myAdapter: MyAdapter
-    lateinit var StreamList: MutableList<Item>
+    lateinit var Level0list: MutableList<Item> //Final list to be passed in Myadapter
     var t = 0
 
 
@@ -62,33 +72,53 @@ class ListFragment : Fragment() {
         // Inflate the layout for this fragment
         //Copy return statement and store it in new variable "View"
         var view = inflater.inflate(R.layout.content_list, container, false)
+
+        //declaration of multiLevelRecyclerView
         val multiLevelRecyclerView =
             view.findViewById(R.id.rv_list) as MultiLevelRecyclerView
+
+        //multiLevelRecyclerView is attached with Layout Manager
         multiLevelRecyclerView.layoutManager = LinearLayoutManager(this.context)
-        //Default Element to include
-        StreamList = ArrayList<RecyclerViewItem>() as MutableList<Item>
+
+        //Default Element to include in list (Help item)
+        Level0list = ArrayList<RecyclerViewItem>() as MutableList<Item>
         var item = Item(0)
         item.setText("All Available Categories")
         item.setSecondText("Swipe Down to Refresh List")
+        //If-Else for changing the text of Help item according to the Mode
         if(Apple.updateClicked == 1){
+            //when ADD Mode is on
+
             item.setText("New +")
             item.setSecondText("If You are adding New List Or for custom add Click here")
         }
         else{
+            //Default text to shown , even in DELETE Mode
             item.setText("All Available Categories")
             item.setSecondText("Swipe Down to Refresh List")
         }
-        StreamList.add(item)
+        //adding item in list
+        Level0list.add(item)
+
+        //Firebase Database Instance and Referance
         db= FirebaseDatabase.getInstance()
         dbrefer=db.getReference()
 
+        /*
+             Calling firstread function to read list from database and display in
+             multiLevelRecyclerView. internal functions related multiLevelRecyclerView
+             can be found in its Adapter class file.(in this case its MyAdapter.java)
+         */
         firstread()
-        myAdapter = MyAdapter(view.context, StreamList, multiLevelRecyclerView)
+
+        //assiging values to adapter
+        myAdapter = MyAdapter(view.context, Level0list, multiLevelRecyclerView)
+
+        //assiging adapter to multiLevelRecyclerView
         multiLevelRecyclerView.adapter = myAdapter
 
+        //setting onclicklistener for respective buttons for their respective modes
         view.add.setOnClickListener{
-
-
             if(t==0) {
                 Apple.updateClicked = 1
                 t=1
@@ -122,6 +152,7 @@ class ListFragment : Fragment() {
             }
             reload()
         }
+        //pull to refresh implementation
         val pullToRefresh: SwipeRefreshLayout = view.findViewById(R.id.pullToRefresh)
         pullToRefresh.setOnRefreshListener {
                         reload()
@@ -132,6 +163,7 @@ class ListFragment : Fragment() {
     }
 
     fun firstread () {
+        //adding child event listener on Root Node of our Database tree
         dbrefer.child("StreamList").addChildEventListener(object : ChildEventListener{
             override fun onCancelled(p0: DatabaseError) {
                 Toast.makeText(context,p0.toString(),Toast.LENGTH_LONG).show()
@@ -141,32 +173,45 @@ class ListFragment : Fragment() {
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {}
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-              val DeptList = ArrayList<RecyclerViewItem>() as MutableList<Item>
-                val stream = Item(0)
-                stream.setText(p0.key.toString())
-                StreamList.add(stream)
-                for (i in p0.children) {
-                        val dept = Item(1)
-                        dept.setText(i.key.toString())
-                        DeptList.add(dept)
-                        stream.addChildren(DeptList as MutableList<RecyclerViewItem>)
-                    val Semlist = ArrayList<RecyclerViewItem>() as MutableList<Item>
-                    for (j in i.children) {
-                        val sem = Item(2)
-                        sem.setText(j.key.toString())
-                        Semlist.add(sem)
-                        dept.addChildren(Semlist as MutableList<RecyclerViewItem>)
-                        val Sublist = ArrayList<RecyclerViewItem>() as MutableList<Item>
-                        for (k in j.children){
-                            val sub = Item(3)
-                            sub.setText(k.key.toString())
-                            Sublist.add(sub)
-                            sem.addChildren(Sublist as MutableList<RecyclerViewItem>)
-                        }
-                    }
-                }
-                myAdapter.notifyDataSetChanged()
+                //useless list and item , its just for filling arguments for listreader function
+                var demolist = ArrayList<RecyclerViewItem>()
+                val demoitem = Item(0)
+                //calling listreader function
+                listreader(demoitem,demolist,p0,0)
 
+              /* IGNORE IGNORE IGNORE
+              HARD CODED WAY TO TRAVERSE LIST
+              val Level1list = ArrayList<RecyclerViewItem>() //as MutableList<Item>
+               val lvl0 = Item(0)
+               lvl0.setText(p0.key.toString())
+               Level0list.add(lvl0)
+               listreader(lvl0,Level1list,p0,1)
+             for (i in p0.children) {
+                       val lvl1 = Item(1)
+                       lvl1.setText(i.key.toString())
+                       Level1list.add(lvl1)
+                       lvl0.addChildren(Level1list as MutableList<RecyclerViewItem>)
+                   val Level2list = ArrayList<RecyclerViewItem>() as MutableList<Item>
+                   for (j in i.children) {
+                       val lvl2 = Item(2)
+                       lvl2.setText(j.key.toString())
+                       Level2list.add(lvl2)
+                       lvl1.addChildren(Level2list as MutableList<RecyclerViewItem>)
+                       val Level3list = ArrayList<RecyclerViewItem>() as MutableList<Item>
+                       for (k in j.children){
+                           val lvl3 = Item(3)
+                           lvl3.setText(k.key.toString())
+                           Level3list.add(lvl3)
+                           lvl2.addChildren(Level3list as MutableList<RecyclerViewItem>)
+
+                       }
+                   }
+                   listreader(lvl1,Level2list,i,2)
+               }
+               IGNORE IGNORE IGNORE */
+
+                //Updating Adapter to detect changes
+                myAdapter.notifyDataSetChanged()
             }
             override fun onChildRemoved(p0: DataSnapshot) {
                 reload()
@@ -175,7 +220,7 @@ class ListFragment : Fragment() {
     }
 
 
-
+        // function to reload the current fragment
     fun reload () {
         val ft: FragmentTransaction = fragmentManager!!.beginTransaction()
         if (Build.VERSION.SDK_INT >= 26) {
@@ -184,6 +229,35 @@ class ListFragment : Fragment() {
         ft.detach(this).attach(this).commit()
     }
 
+
+//A recursive function to traverse a n-level hierarchical database tree
+fun listreader (parent:Item,parentlist:ArrayList<RecyclerViewItem>,p0:DataSnapshot,lvl:Int) {
+       val parentlist = parentlist as MutableList<Item>
+        var lvl = lvl
+    if (!(p0.hasChildren())){
+            Log.i("Leaf node", p0.key.toString()+" "+parent.getText() +"at level $lvl")
+        parent.setSecondText("__")
+        }
+        else if(lvl == 0){
+         val Level1list = ArrayList<RecyclerViewItem>() //as MutableList<Item>
+        val lvl0 = Item(lvl)
+        lvl0.setText(p0.key.toString())
+        Level0list.add(lvl0)
+        var newlevel = lvl + 1
+        listreader(lvl0,Level1list,p0,newlevel)
+     }
+        else {
+            for (i in p0.children){
+                val item = Item(lvl)
+                item.setText(i.key.toString())
+                parentlist.add(item)
+                parent.addChildren(parentlist as MutableList<RecyclerViewItem>)
+                val futurelist = ArrayList<RecyclerViewItem>()
+                var newlevel = lvl + 1
+                listreader(item,futurelist,i,newlevel)
+            }
+        }
+}
 
     companion object {
         /**
@@ -207,7 +281,10 @@ class ListFragment : Fragment() {
 
 }
 
-/* Value Event
+/*
+IGNORE IGNORE IGNORE
+
+Value Event
 DataSnapshot { key = StreamList, value = {Engineering={Computer Science={SEM 6={CSS=CSS, SE=SE, DWM=DWM, SPCC=SPCC, ML=ML}, SEM 3={AOA=AOA}, SEM 1={AC=AC, BEE=BEE, EM=EM, AM=AM, AP=AP}, SEM 2={AC2=AC2, AP2=AP2, SPA=SPA, AM2=AM2, ED=ED}}, Electrical Engineering={SEM 3={EX3=EX3, EX2=EX2, EX1=EX1}, SEM 4={EE=EE}, SEM 1={EE1=EE1, EE3=EE3, EE2=EE2}, SEM 2={EXE2=EXE2, EXE3=EXE3, EXE1=EXE1}}, Information Technology={SEM 3={IT=IT}, SEM 1={CS=CS, CE=CE, IT=IT}, SEM 2={CS1=CS1, IT1=IT1, CE1=CE1}}}} }
 DataSnapshot { key = Engineering, value = {Computer Science={SEM 6={CSS=CSS, SE=SE, DWM=DWM, SPCC=SPCC, ML=ML}, SEM 3={AOA=AOA}, SEM 1={AC=AC, BEE=BEE, EM=EM, AM=AM, AP=AP}, SEM 2={AC2=AC2, AP2=AP2, SPA=SPA, AM2=AM2, ED=ED}}, Electrical Engineering={SEM 3={EX3=EX3, EX2=EX2, EX1=EX1}, SEM 4={EE=EE}, SEM 1={EE1=EE1, EE3=EE3, EE2=EE2}, SEM 2={EXE2=EXE2, EXE3=EXE3, EXE1=EXE1}}, Information Technology={SEM 3={IT=IT}, SEM 1={CS=CS, CE=CE, IT=IT}, SEM 2={CS1=CS1, IT1=IT1, CE1=CE1}}} }
 
@@ -223,4 +300,7 @@ DataSnapshot { key = Engineering, value = {Computer Science={SEM 6={CSS=CSS, SE=
             //Log.i("itemlistt",itemList.toString())
         }
         return itemList;
-    } */
+    }
+    IGNORE IGNORE IGNORE
+
+     */

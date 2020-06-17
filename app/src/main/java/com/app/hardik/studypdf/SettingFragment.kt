@@ -27,6 +27,7 @@ class SettingFragment : Fragment() {
     lateinit var logout : Button
     lateinit var block : Button
     lateinit var delete : Button
+    lateinit var cost : Button
 
 
     // TODO: Rename and change types of parameters
@@ -51,6 +52,7 @@ class SettingFragment : Fragment() {
         logout = view.findViewById(R.id.logoutadmin)
         block = view.findViewById(R.id.block)
         delete = view.findViewById(R.id.delete)
+        cost = view.findViewById(R.id.changecost)
 
 
         logout.setOnClickListener {
@@ -59,7 +61,7 @@ class SettingFragment : Fragment() {
             activity!!.getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
                 .putString("Flag","Null").apply()
             startActivity(Intent(view.context,LoginPage::class.java))
-            startActivity(Intent(view.context,LoginPage::class.java))
+           // startActivity(Intent(view.context,LoginPage::class.java))
         }
 
         block.setOnClickListener {
@@ -71,6 +73,10 @@ class SettingFragment : Fragment() {
             startActivity(intent)
         }
 
+        cost.setOnClickListener {
+            val intent = Intent(view.context,Changecost::class.java)
+            startActivity(intent)
+        }
         return view
     }
 

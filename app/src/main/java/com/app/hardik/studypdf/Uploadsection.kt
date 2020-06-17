@@ -140,36 +140,6 @@ class Uploadsection : AppCompatActivity() {
         }
     }
 
-    /* private fun uploadFile(data: Uri) {
-        progressBar.visibility = View.VISIBLE
-        val filename = editTextFilename.getText().toString()
-        val sRef: StorageReference =
-            firebaseStorage.child(path + filename + ".pdf")
-        val uploadTask = sRef.putFile(data)
-            uploadTask.addOnSuccessListener { taskSnapshot ->
-                progressBar.visibility = View.GONE
-                textViewStatus.text = "File Uploaded Successfully"
-                 val upload = Upload(
-                     filename,
-                     taskSnapshot.storage.getDownloadUrl().result.toString()
-                 )
-                 databaseReference.child(databaseReference.push().getKey()!!).setValue(upload)
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(
-                    applicationContext,
-                    exception.message,
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-            .addOnProgressListener { taskSnapshot ->
-                val progress =
-                    (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount).toInt()
-                textViewStatus.setText("$progress % Uploading...");
-            }
-
-    } */
-
     private fun uploadFile2 (data: Uri){
         progressBar.visibility = View.VISIBLE
         val filename = editTextFilename.getText().toString().trim()
@@ -199,6 +169,8 @@ class Uploadsection : AppCompatActivity() {
                 dbrefr.child("Links").child(filename).child("url").setValue(downloadUri.toString())
                 dbrefr.child("Links").child(filename).child("encryptname").setValue(key)
                 dbrefr.child("Links").child(filename).child("parent").setValue(filetitle)
+                dbrefr.child("Links").child(filename).child("price").setValue(priceval)
+
             }
             else{
                 Toast.makeText(this,"Error",Toast.LENGTH_SHORT).show()

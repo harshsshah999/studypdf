@@ -26,11 +26,13 @@ class SignUp : AppCompatActivity() {
     private lateinit var passwordtext: EditText
     private lateinit var confpasstext: EditText
     private lateinit var nametext: EditText
+    private lateinit var phonenotext: EditText
     private lateinit var signup: Button
     private lateinit var olduser: Button
     lateinit var email: String
     lateinit var password: String
     lateinit var name: String
+    lateinit var phoneno: String
     private lateinit var spinner: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +51,7 @@ class SignUp : AppCompatActivity() {
         nametext = findViewById(R.id.fullname)
         signup = findViewById(R.id.signupstd)
         olduser = findViewById(R.id.olduser)
+        phonenotext = findViewById(R.id.phoneno)
 
         //spinner
         spinner = findViewById<ProgressBar>(R.id.progressBar1)
@@ -106,8 +109,10 @@ class SignUp : AppCompatActivity() {
                 databaseRef.child("Users").child("Students").child(user.uid).child("Username").setValue(name)
                 databaseRef.child("Users").child("Students").child(user.uid).child("UserID").setValue(flag)
                 databaseRef.child("Users").child("Students").child(user.uid).child("Email").setValue(email)
+                databaseRef.child("Users").child("Students").child(user.uid).child("PhoneNo").setValue(phoneno)
                 databaseRef.child("Auth").child("AllUsers").child(user.uid).child("Username").setValue(name)
                 databaseRef.child("Auth").child("AllUsers").child(user.uid).child("UserID").setValue(flag)
+                databaseRef.child("Auth").child("AllUsers").child(user.uid).child("LoggedInDevice").setValue("1")
 
                 startActivity(Intent(this,userdashboard::class.java))
                 finish()
@@ -116,6 +121,7 @@ class SignUp : AppCompatActivity() {
                 databaseRef.child("Users").child("Admin").child(user.uid).child("Username").setValue(name)
                 databaseRef.child("Users").child("Admin").child(user.uid).child("UserID").setValue(flag)
                 databaseRef.child("Users").child("Admin").child(user.uid).child("Email").setValue(email)
+                databaseRef.child("Users").child("Admin").child(user.uid).child("PhoneNo").setValue(phoneno)
                 databaseRef.child("Auth").child("AllUsers").child(user.uid).child("Username").setValue(name)
                 databaseRef.child("Auth").child("AllUsers").child(user.uid).child("UserID").setValue(flag)
                 startActivity(Intent(this,Admindashboard::class.java))
@@ -131,7 +137,7 @@ class SignUp : AppCompatActivity() {
 
     fun Signupstd(v: View) {
         val flag = 1
-        if (emailtext.text.isNullOrEmpty() || passwordtext.text.isNullOrEmpty() || confpasstext.text.isNullOrEmpty() || nametext.text.isNullOrEmpty()) {
+        if (emailtext.text.isNullOrEmpty() || passwordtext.text.isNullOrEmpty() || confpasstext.text.isNullOrEmpty() || nametext.text.isNullOrEmpty() || phonenotext.text.isNullOrEmpty()) {
             Toast.makeText(this, "You can't Leave a Field Empty!", Toast.LENGTH_LONG).show()
         } else if (passwordtext.text.toString() != confpasstext.text.toString()) {
             Toast.makeText(this, "Passwords Doesn't Match!", Toast.LENGTH_LONG).show()
@@ -140,6 +146,7 @@ class SignUp : AppCompatActivity() {
             email = emailtext.text.toString()
             password = passwordtext.text.toString()
             name = nametext.text.toString()
+            phoneno = phonenotext.text.toString()
 
             createAccount(email, password, name, flag)
         }
@@ -156,6 +163,7 @@ class SignUp : AppCompatActivity() {
                 email = emailtext.text.toString()
                 password = passwordtext.text.toString()
                 name = nametext.text.toString()
+                phoneno = phonenotext.text.toString()
                 createAccount(email, password, name, flag)
             }
 

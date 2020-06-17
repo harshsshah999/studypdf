@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.multilevelview.MultiLevelAdapter;
 import com.multilevelview.MultiLevelRecyclerView;
 
@@ -40,10 +41,6 @@ public class MyAdapter extends MultiLevelAdapter {
     private MultiLevelRecyclerView mMultiLevelRecyclerView;
     private FirebaseDatabase db;
     private DatabaseReference dbrefer;
-    private Context alertar;
-
-
-    // Set an EditText view to get user input
 
 
     MyAdapter(Context mContext, List<Item> mListItems, MultiLevelRecyclerView mMultiLevelRecyclerView) {
@@ -56,7 +53,9 @@ public class MyAdapter extends MultiLevelAdapter {
     private void setExpandButton(ImageView expandButton, boolean isExpanded) {
         // set the icon based on the current state
         Log.i("Expanded",String.valueOf(isExpanded));
-        expandButton.setImageResource(isExpanded ? R.drawable.ic_keyboard_arrow_down_black_24dp : R.drawable.ic_keyboard_arrow_up_black_24dp);
+      /* this statement doesnt work , so i have already implemented different logic let it be in comments
+       expandButton.setImageResource(isExpanded ? R.drawable.ic_keyboard_arrow_down_black_24dp : R.drawable.ic_keyboard_arrow_up_black_24dp);
+       */
     }
 
     @Override
@@ -69,7 +68,9 @@ public class MyAdapter extends MultiLevelAdapter {
         mViewHolder = (Holder) holder;
         mItem = mListItems.get(position);
 
+        //Changing Color range of all items according to the mode
         if(Apple.INSTANCE.getUpdateClicked() == 1) {
+            //ADD Mode :- Blue color range
             switch (getItemViewType(position)) {
                 case 0:
                     holder.itemView.setBackgroundColor(Color.parseColor("#dbf3fa"));
@@ -90,6 +91,7 @@ public class MyAdapter extends MultiLevelAdapter {
 
         }
         else if (Apple.INSTANCE.getUpdateClicked() == 0){
+            //Default mode
             switch (getItemViewType(position)) {
                 case 0:
                     holder.itemView.setBackgroundColor(Color.parseColor("#ffffff"));
@@ -109,6 +111,7 @@ public class MyAdapter extends MultiLevelAdapter {
             }
         }
         else if (Apple.INSTANCE.getUpdateClicked() == 2){
+            //DELETE Mode :- Red color range
             switch (getItemViewType(position)) {
                 case 0:
                     holder.itemView.setBackgroundColor(Color.parseColor("#F6BDC0"));
@@ -142,9 +145,9 @@ public class MyAdapter extends MultiLevelAdapter {
 
         // indent child items
         // Note: the parent item should start at zero to have no indentation
-        // e.g. in populateFakeData(); the very first Item shold be instantiate like this: Item item = new Item(0);
         float density = mContext.getResources().getDisplayMetrics().density;
         ((ViewGroup.MarginLayoutParams) mViewHolder.mTextBox.getLayoutParams()).leftMargin = (int) ((getItemViewType(position) * 20) * density + 0.5f);
+      // mViewHolder.leafgive();
     }
 
     private class Holder extends RecyclerView.ViewHolder {
@@ -161,11 +164,15 @@ public class MyAdapter extends MultiLevelAdapter {
             mTextBox =  itemView.findViewById(R.id.text_box);
             mExpandButton =  itemView.findViewById(R.id.expand_field);
 
+
+
+
             // The following code snippets are only necessary if you set multiLevelRecyclerView.removeItemClickListeners(); in MainActivity.java
             // this enables more than one click event on an item (e.g. Click Event on the item itself and click event on the expand button)
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mExpandIcon.animate().rotation(mListItems.get(getAdapterPosition()).isExpanded() ? 0 : -180).start();
                     //set click event on item here
                    // Toast.makeText(mContext, String.format(Locale.ENGLISH, "Item at position %d was clicked!", getAdapterPosition()), Toast.LENGTH_SHORT).show();
                    if(Apple.INSTANCE.getUpdateClicked() == 1){
@@ -177,7 +184,7 @@ public class MyAdapter extends MultiLevelAdapter {
                    }
                 }
             });
-
+            //Events to occur after long clicking any item of our listview
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -185,14 +192,17 @@ public class MyAdapter extends MultiLevelAdapter {
                     if (mListItems.get(getAdapterPosition()).getText().equals("New +")|| mListItems.get(getAdapterPosition()).getText().equals("All Available Categories")){
                         return false;
                     }
+
                     AlertDialog.Builder alert = new AlertDialog.Builder(v.getRootView().getContext());
                     int level = mListItems.get(getAdapterPosition()).getLevel();
                     final String currentName = mListItems.get(getAdapterPosition()).text;
-                    String path = "",parent2Name,parent1Name,parent0Name = "";
-                    Integer parent2,parent1,parent0 = 0;
-                    final ListFragment listFragment = new ListFragment();
-                    if (level == 3) {
+                    String path = "",parentname = "";
+                    Integer parent = 0;
 
+                  /*
+                  IGNORE IGNORE IGNORE
+                  OLD method to get path of current selected item
+                  if (level == 3) {
                         parent2 = parentgive(level, 1);
                         parent2Name = mListItems.get(getAdapterPosition() - parent2).text;
                         parent1 = parentgive(2, parent2);
@@ -211,24 +221,47 @@ public class MyAdapter extends MultiLevelAdapter {
                         parent0 = parentgive(level, 1);
                         parent0Name = mListItems.get(getAdapterPosition() - parent0).text;
                         path = "StreamList/" + parent0Name + "/" + currentName;
-                    } else if (level == 0) {
+                    } else
+                    IGNORE IGNORE IGNORE
+                    */
+
+
+                  //Method to get path of current selected item
+                  if (level == 0) {
                         path = "StreamList/" + currentName;
                     }
+                    else {
+                        for (int i=level ;i>0;i--)
+                        {
+                            parent = parentgive(i,1);
+                            String a = parentname;
+                            String b = mListItems.get(getAdapterPosition() - parent).text;
+                            parentname = b+"/"+a;
+                        }
+                        path = "StreamList/"+parentname+currentName;
+                        Log.i("genpath",path);
+                    }
+
+
                     final String finalPath = path;
                     if(Apple.INSTANCE.getUpdateClicked() == 2) {
                         //Toast.makeText(mContext, String.format(Locale.ENGLISH, "Item at position %d was LONG clicked!", getAdapterPosition()), Toast.LENGTH_LONG).show();
 
+                        //setting alert dilogue for delete mode
                         alert.setTitle("Do you want to Delete?");
                         alert.setMessage("Deleting this will also delete its descendants!");
                         Log.i("path", path);
-
 
                         alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 db = FirebaseDatabase.getInstance();
                                 dbrefer = db.getReference(finalPath);
                                 Log.i("finall delete",finalPath);
+
+                                //deleting item from database
                                 dbrefer.setValue(null);
+                                dbrefer = db.getReference("SubjectPath");
+                                dbrefer.child(currentName).setValue(null);
                                 Toast.makeText(mContext,"Element Deleted successfully,Swipe Down to Refresh",Toast.LENGTH_LONG).show();
                               //  listFragment.reload();
                             }
@@ -244,21 +277,24 @@ public class MyAdapter extends MultiLevelAdapter {
 
                     }
                     else if (Apple.INSTANCE.getUpdateClicked() == 1){
-                        int flag = 0;
-                        if(mListItems.get(getAdapterPosition()).getLevel() == 3){
+
+                      /*  if(mListItems.get(getAdapterPosition()).getLevel() == 3){
                             Toast.makeText(mContext,"You Can't Add here!",Toast.LENGTH_SHORT).show();
                             return false;
-                        }
-                        if(mListItems.get(getAdapterPosition()).getLevel() == 2){
-                            flag = 1;
-                        }
+                        } */
+
                         final String finalPath2 = path+"/";
                        final String title = path+"-";
+
+                       //alert dilogue for adding element in database
                         alert.setTitle("Adding new element...");
                         alert.setMessage("New element will be added under selected element!");
+
+                        //edittext input in alert dilogue with pre written previous path
                         final EditText input = new EditText(v.getRootView().getContext());
                         alert.setView(input);
                         input.setText(finalPath2);
+                        //method to fix the pre written path text on edittext so user cant remove it
                         Selection.setSelection(input.getText(),input.getText().length());
                         input.addTextChangedListener(new TextWatcher() {
                             @Override
@@ -283,7 +319,7 @@ public class MyAdapter extends MultiLevelAdapter {
                         });
 
 
-                        final int finalFlag = flag;
+
                         alert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 db = FirebaseDatabase.getInstance();
@@ -291,23 +327,18 @@ public class MyAdapter extends MultiLevelAdapter {
                                 String adder = input.getText().toString().trim();
                                 String subname = adder.substring(adder.lastIndexOf("/") + 1);
                                 Log.i("subname",subname);
+
                                 if(adder.equals(finalPath2)){
                                     Toast.makeText(mContext, "Error: Field can't be blank", Toast.LENGTH_SHORT).show();
                                     Log.i("exitt","eee");
                                     return;
-
                                 }
                                 Log.i("finall add",adder);
                                 dbrefer.child(adder).setValue(adder);
-                                //if(mListItems.get(getAdapterPosition()).getLevel() == 3)
-                                if(finalFlag == 1){
-                                    dbrefer.child("SubjectPath").child(subname).setValue(adder);
-                                }
-
+                                dbrefer.child("SubjectPath").child(subname).setValue(adder);
+                                dbrefer.child("SubjectPath").child(currentName).setValue(null);
                                 Toast.makeText(mContext,"New Element added successfully,Swipe Down to Refresh",Toast.LENGTH_LONG).show();
 
-
-//                                listFragment.reload();
                             }
                         });
                         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -341,6 +372,7 @@ public class MyAdapter extends MultiLevelAdapter {
 
 
         }
+        //a function which gives location of parent node of selected node
         public Integer parentgive(int level,int x){
 
             int parentlevel = mListItems.get(getAdapterPosition() - x).getLevel();
@@ -355,5 +387,6 @@ public class MyAdapter extends MultiLevelAdapter {
             }
             return x;
         }
+
     }
 }

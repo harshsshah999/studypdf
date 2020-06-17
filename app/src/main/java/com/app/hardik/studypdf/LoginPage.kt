@@ -16,6 +16,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
@@ -25,10 +26,12 @@ import com.google.firebase.database.*
 class LoginPage : AppCompatActivity() {
     lateinit var loginbtn : Button
     lateinit var newusrbtn : Button
+    lateinit var forgotbtn: Button
     lateinit var emailtext : EditText
     lateinit var passwordtext : EditText
     lateinit var email: String
     lateinit var password: String
+    lateinit var loggedindevice: String
     private lateinit var databaseRef: DatabaseReference
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
@@ -64,6 +67,7 @@ class LoginPage : AppCompatActivity() {
         //Variables
         loginbtn = findViewById(R.id.login)
         newusrbtn = findViewById(R.id.newuser)
+        forgotbtn = findViewById(R.id.forgotpwd)
         emailtext = findViewById(R.id.email)
         passwordtext = findViewById(R.id.password)
         database = FirebaseDatabase.getInstance()
@@ -71,6 +75,11 @@ class LoginPage : AppCompatActivity() {
 
         //spinner
         spinner = findViewById<ProgressBar>(R.id.progressBar1)
+
+        //On clicklistener for Forgot Button
+        forgotbtn.setOnClickListener {
+            startActivity(Intent(this@LoginPage,ForgotPWD::class.java))
+        }
 
         // Code for Enter key
              passwordtext.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
@@ -93,6 +102,9 @@ class LoginPage : AppCompatActivity() {
         }
         //Sign up Intent Fun
     }
+
+
+
     fun loginAccount (email:String,password:String) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
@@ -133,21 +145,52 @@ class LoginPage : AppCompatActivity() {
             }
     }
     fun onAuthSuccess(user: FirebaseUser) {
-        databaseRef.child(user.uid).child("UserID").addListenerForSingleValueEvent(object : ValueEventListener{
+        databaseRef.child(user.uid).addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
 
             }
             override fun onDataChange(p0: DataSnapshot) {
-                val flag = p0.value.toString()
+                val flag = p0.child("UserID").value.toString()
                 //Log.i("flagID",flag)
 
-                getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
-                    .putBoolean("isLoggedin", true).apply()
-                getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
-                    .putString("Flag",flag).apply()
+                loggedindevice = p0.child("LoggedInDevice").value.toString()
+
+                //If loggedin devices is more than three then don't save shared preference
+                //So it'll not keep user logged in
+                if(loggedindevice != "3") {
+                    getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
+                        .putBoolean("isLoggedin", true).apply()
+                    getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
+                        .putString("Flag", flag).apply()
+                }
+
                 if(flag=="1") {
-                    startActivity(Intent(this@LoginPage, userdashboard::class.java))
-                    finish()
+
+                    if (loggedindevice == "3"){
+                        val builder = AlertDialog.Builder(this@LoginPage)
+                        builder.setTitle("Warning")
+                        builder.setMessage("You can't login on more than 3 devices")
+                        builder.setPositiveButton("Continue") { dialog, which ->
+                            //Toast.makeText(applicationContext, "continuar", Toast.LENGTH_SHORT).show()
+                        }
+                        val dialog: AlertDialog = builder.create()
+                        dialog.show()
+                    }
+                    else if (loggedindevice == "0"){
+                        databaseRef.child(user.uid).child("LoggedInDevice").setValue("1")
+                        startActivity(Intent(this@LoginPage, userdashboard::class.java))
+                        finish()
+                    }
+                    else if (loggedindevice == "1"){
+                        databaseRef.child(user.uid).child("LoggedInDevice").setValue("2")
+                        startActivity(Intent(this@LoginPage, userdashboard::class.java))
+                        finish()
+                    }
+                    else if (loggedindevice == "2"){
+                        databaseRef.child(user.uid).child("LoggedInDevice").setValue("3")
+                        startActivity(Intent(this@LoginPage, userdashboard::class.java))
+                        finish()
+                    }
                 }
                 else if (flag=="2"){
                     startActivity(Intent(this@LoginPage, Admindashboard::class.java))
