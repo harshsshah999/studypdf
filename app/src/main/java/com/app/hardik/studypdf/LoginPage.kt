@@ -1,7 +1,10 @@
 package com.app.hardik.studypdf
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -13,6 +16,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -20,10 +26,12 @@ import com.google.firebase.database.*
 class LoginPage : AppCompatActivity() {
     lateinit var loginbtn : Button
     lateinit var newusrbtn : Button
+    lateinit var forgotbtn: Button
     lateinit var emailtext : EditText
     lateinit var passwordtext : EditText
     lateinit var email: String
     lateinit var password: String
+    lateinit var loggedindevice: String
     private lateinit var databaseRef: DatabaseReference
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
@@ -33,6 +41,24 @@ class LoginPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_page)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            /*val intent = Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.parse("package:$packageName")
+            )
+            startActivity(intent)*/
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                1
+            )
+
+        }
 
 
         // Initialize Firebase Auth
@@ -41,6 +67,7 @@ class LoginPage : AppCompatActivity() {
         //Variables
         loginbtn = findViewById(R.id.login)
         newusrbtn = findViewById(R.id.newuser)
+        forgotbtn = findViewById(R.id.forgotpwd)
         emailtext = findViewById(R.id.email)
         passwordtext = findViewById(R.id.password)
         database = FirebaseDatabase.getInstance()
@@ -48,6 +75,11 @@ class LoginPage : AppCompatActivity() {
 
         //spinner
         spinner = findViewById<ProgressBar>(R.id.progressBar1)
+
+        //On clicklistener for Forgot Button
+        forgotbtn.setOnClickListener {
+            startActivity(Intent(this@LoginPage,ForgotPWD::class.java))
+        }
 
         // Code for Enter key
              passwordtext.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
@@ -70,6 +102,9 @@ class LoginPage : AppCompatActivity() {
         }
         //Sign up Intent Fun
     }
+
+
+
     fun loginAccount (email:String,password:String) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
@@ -110,21 +145,52 @@ class LoginPage : AppCompatActivity() {
             }
     }
     fun onAuthSuccess(user: FirebaseUser) {
-        databaseRef.child(user.uid).child("UserID").addListenerForSingleValueEvent(object : ValueEventListener{
+        databaseRef.child(user.uid).addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
 
             }
             override fun onDataChange(p0: DataSnapshot) {
-                val flag = p0.value.toString()
+                val flag = p0.child("UserID").value.toString()
                 //Log.i("flagID",flag)
 
-                getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
-                    .putBoolean("isLoggedin", true).apply()
-                getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
-                    .putString("Flag",flag).apply()
+                loggedindevice = p0.child("LoggedInDevice").value.toString()
+
+                //If loggedin devices is more than three then don't save shared preference
+                //So it'll not keep user logged in
+                if(loggedindevice != "3") {
+                    getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
+                        .putBoolean("isLoggedin", true).apply()
+                    getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
+                        .putString("Flag", flag).apply()
+                }
+
                 if(flag=="1") {
-                    startActivity(Intent(this@LoginPage, userdashboard::class.java))
-                    finish()
+
+                    if (loggedindevice == "3"){
+                        val builder = AlertDialog.Builder(this@LoginPage)
+                        builder.setTitle("Warning")
+                        builder.setMessage("You can't login on more than 3 devices")
+                        builder.setPositiveButton("Continue") { dialog, which ->
+                            //Toast.makeText(applicationContext, "continuar", Toast.LENGTH_SHORT).show()
+                        }
+                        val dialog: AlertDialog = builder.create()
+                        dialog.show()
+                    }
+                    else if (loggedindevice == "0"){
+                        databaseRef.child(user.uid).child("LoggedInDevice").setValue("1")
+                        startActivity(Intent(this@LoginPage, userdashboard::class.java))
+                        finish()
+                    }
+                    else if (loggedindevice == "1"){
+                        databaseRef.child(user.uid).child("LoggedInDevice").setValue("2")
+                        startActivity(Intent(this@LoginPage, userdashboard::class.java))
+                        finish()
+                    }
+                    else if (loggedindevice == "2"){
+                        databaseRef.child(user.uid).child("LoggedInDevice").setValue("3")
+                        startActivity(Intent(this@LoginPage, userdashboard::class.java))
+                        finish()
+                    }
                 }
                 else if (flag=="2"){
                     startActivity(Intent(this@LoginPage, Admindashboard::class.java))
@@ -169,7 +235,32 @@ class LoginPage : AppCompatActivity() {
         }
     }
 
-
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1) {
+            if (grantResults.count() > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED
+            ) {
+                Toast.makeText(
+                    this,
+                    "Storage Permission Granted",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Storage Permission Denied",
+                    Toast.LENGTH_SHORT
+                )
+                    .show();
+            }
+        }
+    }
 
 
 

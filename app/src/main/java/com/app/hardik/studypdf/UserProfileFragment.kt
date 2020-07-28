@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -39,6 +40,7 @@ class UserProfileFragment : Fragment() {
     lateinit var education_value : String
     lateinit var logout : Button
     private lateinit var spinner: ProgressBar
+    lateinit var nav_menu: Menu
 
     var user : FirebaseUser? = null
     // TODO: Rename and change types of parameters
@@ -74,6 +76,7 @@ class UserProfileFragment : Fragment() {
 
         spinner.visibility = View.VISIBLE
 
+
         view.setOnClickListener{
             it.hideKeyboard()
         }
@@ -83,6 +86,11 @@ class UserProfileFragment : Fragment() {
                 .putBoolean("isLoggedin", false).apply()
             activity!!.getSharedPreferences("Loggedin", Context.MODE_PRIVATE).edit()
                 .putString("Flag","Null").apply()
+
+            //decrease count of device while logout
+            device_count = (device_count.toInt() - 1).toString()
+            databaseReference.child("Auth").child("AllUsers").child(user!!.uid).child("LoggedInDevice").setValue(device_count)
+
             startActivity(Intent(view.context,LoginPage::class.java))
         }
 

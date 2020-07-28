@@ -3,26 +3,21 @@ package com.app.hardik.studypdf
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
+import android.net.NetworkInfo
 import android.os.Bundle
-import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.*
 
 
 class MainActivity : AppCompatActivity() {
 
             //Global declaration of variables
-            lateinit var anim : Animation
+            lateinit var anim_fade_in : Animation
             lateinit var logo : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,10 +36,9 @@ class MainActivity : AppCompatActivity() {
             logo = findViewById(R.id.logo)
 
             //Create Animation
-            anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in)
+            anim_fade_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in)
 
-            //Animation Class functions
-            anim.setAnimationListener(object : AnimationListener {
+            anim_fade_in.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation) {
             }
             override fun onAnimationEnd(animation: Animation) {
@@ -62,24 +56,30 @@ class MainActivity : AppCompatActivity() {
                         if (isOnline(this@MainActivity)){
                             if (flag == "1"){
                                 startActivity(Intent(this@MainActivity,userdashboard::class.java))
+                                finish()
                             }
                             else if (flag == "2"){
                                 startActivity(Intent(this@MainActivity,Admindashboard::class.java))
+                                finish()
                             }
                             else{
                                 startActivity(Intent(this@MainActivity,LoginPage::class.java))
+                                finish()
                             }
 
                         }
                         else{
                             if (flag == "1"){
                                 startActivity(Intent(this@MainActivity,userdashboard::class.java))
+                                finish()
                             }
                             else if (flag == "2"){
                                 startActivity(Intent(this@MainActivity,Admindashboard::class.java))
+                                finish()
                             }
                             else{
                                 startActivity(Intent(this@MainActivity,LoginPage::class.java))
+                                finish()
                             }
                             Toast.makeText(this@MainActivity,"You are offline",Toast.LENGTH_LONG).show()
                         }
@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE).edit()
-                    .putBoolean("isFirstRun", false).commit()
+                    .putBoolean("isFirstRun", false).apply()
 
             }
             override fun onAnimationRepeat(animation: Animation) {
@@ -100,28 +100,42 @@ class MainActivity : AppCompatActivity() {
         })
 
             //Trigger Animation
-            logo.startAnimation(anim)
+        logo.setImageResource(R.drawable.finalappicon)
+        logo.startAnimation(anim_fade_in)
     }
 
-    fun isOnline(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (connectivityManager != null) {
-            val capabilities =
-                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-            if (capabilities != null) {
-                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
-                    return true
-                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
-                    return true
-                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+}
+fun isOnline(context: Context): Boolean {
+    /*val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    if (connectivityManager != null) {
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (capabilities != null) {
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                return true
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+                return true
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                return true
+            }
+        }
+    }
+    return false*/
+    val connectivity =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    if(connectivity!=null){
+    val info = connectivity.allNetworkInfo
+        if(info!=null){
+            for(i in 0..info.size - 1){
+                if(info[i].state == NetworkInfo.State.CONNECTED){
                     return true
                 }
             }
         }
-        return false
     }
+    return false
 }
